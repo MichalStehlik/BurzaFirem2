@@ -1,7 +1,9 @@
 using BurzaFirem2.Data;
 using BurzaFirem2.Models;
+using BurzaFirem2.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -24,6 +26,11 @@ builder.Logging.AddSerilog(sLog);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddOptions();
+builder.Services.AddScoped<TokenService>();
+builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("JWT"));
+builder.Services.AddScoped<RazorViewToStringRenderer>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
