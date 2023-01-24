@@ -89,9 +89,9 @@ namespace BurzaFirem2.Services
 
     public class EmailOptions
     {
-        public string TenantId { get; set; }
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-        public string UserId { get; set; }
+        public string TenantId { get; set; } = String.Empty;
+        public string ClientId { get; set; } = String.Empty;
+        public string ClientSecret { get; set; } = String.Empty;
+        public string UserId { get; set; } = String.Empty;
     }
 }

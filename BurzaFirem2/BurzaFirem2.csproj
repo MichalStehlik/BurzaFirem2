@@ -27,6 +27,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Graph" Version="4.51.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.2" />
     <PackageReference Include="Serilog" Version="2.12.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
@@ -41,12 +42,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="InputModels\" />
-    <Folder Include="Constants\" />
-    <Folder Include="Emails\" />
+    <Folder Include="Emails\Pages\Shared\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Logs\" />
-    <Folder Include="ViewModels\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

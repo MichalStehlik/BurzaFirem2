@@ -1,3 +1,4 @@
+using BurzaFirem2.Constants;
 using BurzaFirem2.Data;
 using BurzaFirem2.Models;
 using BurzaFirem2.Services;
@@ -92,6 +93,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Security.ADMIN_POLICY, policy => { policy.RequireClaim(Security.ADMIN_CLAIM,"1"); });
+    options.AddPolicy(Security.EDITOR_POLICY, policy => { policy.RequireAssertion(x => x.User.HasClaim(Security.ADMIN_CLAIM, "1") || x.User.HasClaim(Security.EDITOR_CLAIM, "1")); });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -113,6 +120,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
 
-app.MapFallbackToFile("index.html"); ;
+app.MapFallbackToFile("index.html");
 
 app.Run();

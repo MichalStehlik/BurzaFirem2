@@ -9,8 +9,8 @@ namespace BurzaFirem2.Models
         public int CompanyId { get; set; }
         [Required]
         public string Name { get; set; } = String.Empty;
-        public string LogoFileName { get; set; } = String.Empty;
-        public ImageOrientation LogoOrientation { get; set; } = ImageOrientation.Unknown;
+        public StoredImage? Logo { get; set; } = null;
+        public Guid? LogoId { get; set; } = null;
         public string Description { get; set; } = String.Empty;
         public string Wanted { get; set; } = String.Empty;
         public string Offer { get; set; } = String.Empty;
@@ -23,7 +23,7 @@ namespace BurzaFirem2.Models
         public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
         public ICollection<Activity> Activities { get; set; } = new List<Activity>();
         [Required]
-        public string UserId { get; set; }
+        public Guid UserId { get; set; } 
         [Required]
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
@@ -33,7 +33,5 @@ namespace BurzaFirem2.Models
         [Required]
         [Column(TypeName = "datetime2")]
         public DateTime Updated { get; set; }
-
-
     }
 }

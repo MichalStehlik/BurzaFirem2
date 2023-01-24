@@ -1,0 +1,14 @@
+﻿@using BurzaFirem2.Emails.ViewModels
+
+@model ConfirmEmailVM
+@{
+    ViewData["Title"] = "Vítejte";
+}
+<p>Váš účet v naší aplikaci je téměř připraven. Zbývá už jen jeden drobný krůček: potvrdit existenci a vlastnictví Vámi uvedené emailové adresy.</p>
+<p>Za registraci a potvrzení adresy předem děkujeme.</p>
+<p>Můžete použít připravený odkaz:</p>
+<div style="text-align: center">
+    <a href="@Html.Raw(Model.ConfirmEmailUrl)">
+        Potvrdit email
+    </a>
+</div>

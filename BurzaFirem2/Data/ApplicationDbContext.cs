@@ -15,6 +15,7 @@ namespace BurzaFirem2.Data
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Models.Activity> Activities { get; set; }
+        public DbSet<StoredImage> Images { get; set; }
 
         public ApplicationDbContext(DbContextOptions options, ILogger<ApplicationDbContext> logger) : base(options)
         {
@@ -24,11 +25,11 @@ namespace BurzaFirem2.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.UseCollation("NOCASE");
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 1, Name = "IT", BackgroundColor = "#ff0000" });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 2, Name = "Strojírenství", BackgroundColor = "#0000ff" });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 3, Name = "Elektrotechnika", BackgroundColor = "#00ff00" });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 4, Name = "Lyceum", BackgroundColor = "#ff00ff" });
+            modelBuilder.Entity<Company>().HasOne(c => c.Logo).WithOne(i => i.Company).HasForeignKey<Company>(c => c.LogoId);
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 1, Name = "IT", BackgroundColor = "#D90000" });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 2, Name = "Strojírenství", BackgroundColor = "#357BC2" });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 3, Name = "Elektrotechnika", BackgroundColor = "#00AA80" });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 4, Name = "Lyceum", BackgroundColor = "#ECB100" });
             modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 1, Name = "Exkurze" });
             modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 2, Name = "Čtrnáctidenní praxe" });
             modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 3, Name = "Dlouhodobá praxe" });

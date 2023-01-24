@@ -15,10 +15,10 @@ namespace BurzaFirem2.Services
         private readonly JWTOptions _options;
         private readonly UserManager<ApplicationUser> _um;
 
-        public TokenService(ILogger<TokenService> logger, JWTOptions options, UserManager<ApplicationUser> um)
+        public TokenService(ILogger<TokenService> logger, IOptions<JWTOptions> options, UserManager<ApplicationUser> um)
         {
             _logger = logger;
-            _options = options;
+            _options = options.Value;
             _um = um;
         }
 
@@ -37,6 +37,7 @@ namespace BurzaFirem2.Services
                 new("sub", user.Id.ToString()),
                 new(ClaimTypes.Email, user.Email)
             };
+
             var userClaims = await _um.GetClaimsAsync(user);
             claims.AddRange(userClaims);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -56,9 +57,9 @@ namespace BurzaFirem2.Services
 
     public class JWTOptions
     {
-        public string Issuer { get; set; }
-        public string Audience { get; set; }
-        public string Key { get; set; }
+        public string Issuer { get; set; } = String.Empty;
+        public string Audience { get; set; } = String.Empty;
+        public string Key { get; set; } = String.Empty;
         public int Expiration { get; set; }
     }
 }
