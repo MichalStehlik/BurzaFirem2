@@ -64,6 +64,9 @@ namespace BurzaFirem2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Visible")
+                        .HasColumnType("bit");
+
                     b.HasKey("ActivityId");
 
                     b.ToTable("Activities");
@@ -72,22 +75,32 @@ namespace BurzaFirem2.Migrations
                         new
                         {
                             ActivityId = 1,
-                            Name = "Exkurze"
+                            Name = "Exkurze",
+                            Visible = true
                         },
                         new
                         {
                             ActivityId = 2,
-                            Name = "Čtrnáctidenní praxe"
+                            Name = "Čtrnáctidenní praxe",
+                            Visible = true
                         },
                         new
                         {
                             ActivityId = 3,
-                            Name = "Dlouhodobá praxe"
+                            Name = "Dlouhodobá praxe",
+                            Visible = true
                         },
                         new
                         {
                             ActivityId = 4,
-                            Name = "Brigáda"
+                            Name = "Brigáda",
+                            Visible = true
+                        },
+                        new
+                        {
+                            ActivityId = 5,
+                            Name = "Zaměstnání",
+                            Visible = true
                         });
                 });
 
@@ -167,18 +180,18 @@ namespace BurzaFirem2.Migrations
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7a7d66bd-66cf-4043-b81e-e53fcec673db",
-                            Created = new DateTime(2023, 1, 24, 20, 59, 17, 372, DateTimeKind.Local).AddTicks(4070),
+                            ConcurrencyStamp = "fbe4e7cb-0910-4eaf-b118-4ae6f2bc7df0",
+                            Created = new DateTime(2023, 1, 28, 21, 36, 1, 880, DateTimeKind.Local).AddTicks(8118),
                             Email = "burza@pslib.cz",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "BURZA@PSLIB.CZ",
                             NormalizedUserName = "BURZA@PSLIB.CZ",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIJZUINQKDyTymJAAPM3GugcsFNpoSasGa+ItdiaTFOqrXX6ccu9HKLp6/RVagJ/FQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMDiHJo2Bu2dWACbu4+1zUdFdJIhVZtzzZaJcPWFk7804+pqGQz+xMOwjWpVlNHwhw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI",
                             TwoFactorEnabled = false,
-                            Updated = new DateTime(2023, 1, 24, 20, 59, 17, 372, DateTimeKind.Local).AddTicks(4124),
+                            Updated = new DateTime(2023, 1, 28, 21, 36, 1, 880, DateTimeKind.Local).AddTicks(8167),
                             UserName = "burza@pslib.cz"
                         });
                 });
@@ -199,6 +212,9 @@ namespace BurzaFirem2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Visible")
+                        .HasColumnType("bit");
+
                     b.HasKey("BranchId");
 
                     b.ToTable("Branches");
@@ -208,25 +224,29 @@ namespace BurzaFirem2.Migrations
                         {
                             BranchId = 1,
                             Name = "IT",
-                            TextColor = "#000000"
+                            TextColor = "#000000",
+                            Visible = true
                         },
                         new
                         {
                             BranchId = 2,
                             Name = "Strojírenství",
-                            TextColor = "#000000"
+                            TextColor = "#000000",
+                            Visible = true
                         },
                         new
                         {
                             BranchId = 3,
                             Name = "Elektrotechnika",
-                            TextColor = "#000000"
+                            TextColor = "#000000",
+                            Visible = true
                         },
                         new
                         {
                             BranchId = 4,
                             Name = "Lyceum",
-                            TextColor = "#000000"
+                            TextColor = "#000000",
+                            Visible = true
                         });
                 });
 
@@ -327,6 +347,29 @@ namespace BurzaFirem2.Migrations
                     b.ToTable("Contacts");
                 });
 
+            modelBuilder.Entity("BurzaFirem2.Models.Listing", b =>
+                {
+                    b.Property<int>("ListingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ListingId"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Visible")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ListingId");
+
+                    b.ToTable("Listing");
+                });
+
             modelBuilder.Entity("BurzaFirem2.Models.StoredImage", b =>
                 {
                     b.Property<Guid>("ImageId")
@@ -334,6 +377,9 @@ namespace BurzaFirem2.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CompanyLogoId")
                         .HasColumnType("int");
 
                     b.Property<string>("ContentType")
@@ -355,9 +401,26 @@ namespace BurzaFirem2.Migrations
 
                     b.HasKey("ImageId");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("UploaderId");
 
-                    b.ToTable("StoredImage");
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("CompanyListing", b =>
+                {
+                    b.Property<int>("CompaniesCompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ListingsListingId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CompaniesCompanyId", "ListingsListingId");
+
+                    b.HasIndex("ListingsListingId");
+
+                    b.ToTable("CompanyListing");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -561,7 +624,7 @@ namespace BurzaFirem2.Migrations
             modelBuilder.Entity("BurzaFirem2.Models.Company", b =>
                 {
                     b.HasOne("BurzaFirem2.Models.StoredImage", "Logo")
-                        .WithOne("Company")
+                        .WithOne("CompanyLogo")
                         .HasForeignKey("BurzaFirem2.Models.Company", "LogoId");
 
                     b.HasOne("BurzaFirem2.Models.ApplicationUser", "User")
@@ -588,13 +651,35 @@ namespace BurzaFirem2.Migrations
 
             modelBuilder.Entity("BurzaFirem2.Models.StoredImage", b =>
                 {
+                    b.HasOne("BurzaFirem2.Models.Company", "Company")
+                        .WithMany("Images")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("BurzaFirem2.Models.ApplicationUser", "Uploader")
                         .WithMany()
                         .HasForeignKey("UploaderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Company");
+
                     b.Navigation("Uploader");
+                });
+
+            modelBuilder.Entity("CompanyListing", b =>
+                {
+                    b.HasOne("BurzaFirem2.Models.Company", null)
+                        .WithMany()
+                        .HasForeignKey("CompaniesCompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BurzaFirem2.Models.Listing", null)
+                        .WithMany()
+                        .HasForeignKey("ListingsListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -651,11 +736,13 @@ namespace BurzaFirem2.Migrations
             modelBuilder.Entity("BurzaFirem2.Models.Company", b =>
                 {
                     b.Navigation("Contacts");
+
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("BurzaFirem2.Models.StoredImage", b =>
                 {
-                    b.Navigation("Company");
+                    b.Navigation("CompanyLogo");
                 });
 #pragma warning restore 612, 618
         }

@@ -19,5 +19,7 @@ namespace BurzaFirem2.Models
         public int Height { get; set; } = 0;
         public Company? Company { get; set; }
         public int? CompanyId { get; set; }
+        public Company? CompanyLogo { get; set; }
+        public int? CompanyLogoId { get; set; }
     }
 }

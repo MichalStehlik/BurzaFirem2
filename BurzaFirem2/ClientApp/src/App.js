@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
-import { Layout } from './components/Layout';
+import { FrontLayout } from "./pages/Front"
+import Home from "./pages/Front/Home"
 import './custom.css';
 
 export default class App extends Component {
@@ -9,14 +10,15 @@ export default class App extends Component {
 
   render() {
     return (
-      <Layout>
         <Routes>
+          <Route path='/' element={<FrontLayout />}>
+            <Route index element={<Home />} />
+          </Route>
           {AppRoutes.map((route, index) => {
             const { element, ...rest } = route;
             return <Route key={index} {...rest} element={element} />;
           })}
         </Routes>
-      </Layout>
     );
   }
 }

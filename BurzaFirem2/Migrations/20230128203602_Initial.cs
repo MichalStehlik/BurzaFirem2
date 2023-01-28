@@ -19,7 +19,8 @@ namespace BurzaFirem2.Migrations
                 {
                     ActivityId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Visible = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,11 +75,27 @@ namespace BurzaFirem2.Migrations
                     BranchId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TextColor = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    TextColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Visible = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Branches", x => x.BranchId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Listing",
+                columns: table => new
+                {
+                    ListingId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Visible = table.Column<bool>(type: "bit", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Listing", x => x.ListingId);
                 });
 
             migrationBuilder.CreateTable(
@@ -188,25 +205,38 @@ namespace BurzaFirem2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StoredImage",
+                name: "ActivityCompany",
                 columns: table => new
                 {
-                    ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UploaderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OriginalName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Width = table.Column<int>(type: "int", nullable: false),
-                    Height = table.Column<int>(type: "int", nullable: false),
-                    CompanyId = table.Column<int>(type: "int", nullable: true)
+                    ActivitiesActivityId = table.Column<int>(type: "int", nullable: false),
+                    CompaniesCompanyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StoredImage", x => x.ImageId);
+                    table.PrimaryKey("PK_ActivityCompany", x => new { x.ActivitiesActivityId, x.CompaniesCompanyId });
                     table.ForeignKey(
-                        name: "FK_StoredImage_AspNetUsers_UploaderId",
-                        column: x => x.UploaderId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        name: "FK_ActivityCompany_Activities_ActivitiesActivityId",
+                        column: x => x.ActivitiesActivityId,
+                        principalTable: "Activities",
+                        principalColumn: "ActivityId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BranchCompany",
+                columns: table => new
+                {
+                    BranchesBranchId = table.Column<int>(type: "int", nullable: false),
+                    CompaniesCompanyId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BranchCompany", x => new { x.BranchesBranchId, x.CompaniesCompanyId });
+                    table.ForeignKey(
+                        name: "FK_BranchCompany_Branches_BranchesBranchId",
+                        column: x => x.BranchesBranchId,
+                        principalTable: "Branches",
+                        principalColumn: "BranchId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -239,58 +269,29 @@ namespace BurzaFirem2.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Companies_StoredImage_LogoId",
-                        column: x => x.LogoId,
-                        principalTable: "StoredImage",
-                        principalColumn: "ImageId");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ActivityCompany",
+                name: "CompanyListing",
                 columns: table => new
                 {
-                    ActivitiesActivityId = table.Column<int>(type: "int", nullable: false),
-                    CompaniesCompanyId = table.Column<int>(type: "int", nullable: false)
+                    CompaniesCompanyId = table.Column<int>(type: "int", nullable: false),
+                    ListingsListingId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ActivityCompany", x => new { x.ActivitiesActivityId, x.CompaniesCompanyId });
+                    table.PrimaryKey("PK_CompanyListing", x => new { x.CompaniesCompanyId, x.ListingsListingId });
                     table.ForeignKey(
-                        name: "FK_ActivityCompany_Activities_ActivitiesActivityId",
-                        column: x => x.ActivitiesActivityId,
-                        principalTable: "Activities",
-                        principalColumn: "ActivityId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ActivityCompany_Companies_CompaniesCompanyId",
+                        name: "FK_CompanyListing_Companies_CompaniesCompanyId",
                         column: x => x.CompaniesCompanyId,
                         principalTable: "Companies",
                         principalColumn: "CompanyId",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BranchCompany",
-                columns: table => new
-                {
-                    BranchesBranchId = table.Column<int>(type: "int", nullable: false),
-                    CompaniesCompanyId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BranchCompany", x => new { x.BranchesBranchId, x.CompaniesCompanyId });
                     table.ForeignKey(
-                        name: "FK_BranchCompany_Branches_BranchesBranchId",
-                        column: x => x.BranchesBranchId,
-                        principalTable: "Branches",
-                        principalColumn: "BranchId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BranchCompany_Companies_CompaniesCompanyId",
-                        column: x => x.CompaniesCompanyId,
-                        principalTable: "Companies",
-                        principalColumn: "CompanyId",
+                        name: "FK_CompanyListing_Listing_ListingsListingId",
+                        column: x => x.ListingsListingId,
+                        principalTable: "Listing",
+                        principalColumn: "ListingId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -316,15 +317,46 @@ namespace BurzaFirem2.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UploaderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OriginalName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Width = table.Column<int>(type: "int", nullable: false),
+                    Height = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<int>(type: "int", nullable: true),
+                    CompanyLogoId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.ImageId);
+                    table.ForeignKey(
+                        name: "FK_Images_AspNetUsers_UploaderId",
+                        column: x => x.UploaderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Images_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "CompanyId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "Activities",
-                columns: new[] { "ActivityId", "Name" },
+                columns: new[] { "ActivityId", "Name", "Visible" },
                 values: new object[,]
                 {
-                    { 1, "Exkurze" },
-                    { 2, "Čtrnáctidenní praxe" },
-                    { 3, "Dlouhodobá praxe" },
-                    { 4, "Brigáda" }
+                    { 1, "Exkurze", true },
+                    { 2, "Čtrnáctidenní praxe", true },
+                    { 3, "Dlouhodobá praxe", true },
+                    { 4, "Brigáda", true },
+                    { 5, "Zaměstnání", true }
                 });
 
             migrationBuilder.InsertData(
@@ -339,17 +371,17 @@ namespace BurzaFirem2.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Created", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "Updated", "UserName" },
-                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, "7a7d66bd-66cf-4043-b81e-e53fcec673db", new DateTime(2023, 1, 24, 20, 59, 17, 372, DateTimeKind.Local).AddTicks(4070), "burza@pslib.cz", true, false, null, "BURZA@PSLIB.CZ", "BURZA@PSLIB.CZ", "AQAAAAIAAYagAAAAEIJZUINQKDyTymJAAPM3GugcsFNpoSasGa+ItdiaTFOqrXX6ccu9HKLp6/RVagJ/FQ==", null, false, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 1, 24, 20, 59, 17, 372, DateTimeKind.Local).AddTicks(4124), "burza@pslib.cz" });
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, "fbe4e7cb-0910-4eaf-b118-4ae6f2bc7df0", new DateTime(2023, 1, 28, 21, 36, 1, 880, DateTimeKind.Local).AddTicks(8118), "burza@pslib.cz", true, false, null, "BURZA@PSLIB.CZ", "BURZA@PSLIB.CZ", "AQAAAAIAAYagAAAAEMDiHJo2Bu2dWACbu4+1zUdFdJIhVZtzzZaJcPWFk7804+pqGQz+xMOwjWpVlNHwhw==", null, false, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 1, 28, 21, 36, 1, 880, DateTimeKind.Local).AddTicks(8167), "burza@pslib.cz" });
 
             migrationBuilder.InsertData(
                 table: "Branches",
-                columns: new[] { "BranchId", "Name", "TextColor" },
+                columns: new[] { "BranchId", "Name", "TextColor", "Visible" },
                 values: new object[,]
                 {
-                    { 1, "IT", "#000000" },
-                    { 2, "Strojírenství", "#000000" },
-                    { 3, "Elektrotechnika", "#000000" },
-                    { 4, "Lyceum", "#000000" }
+                    { 1, "IT", "#000000", true },
+                    { 2, "Strojírenství", "#000000", true },
+                    { 3, "Elektrotechnika", "#000000", true },
+                    { 4, "Lyceum", "#000000", true }
                 });
 
             migrationBuilder.InsertData(
@@ -428,19 +460,56 @@ namespace BurzaFirem2.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CompanyListing_ListingsListingId",
+                table: "CompanyListing",
+                column: "ListingsListingId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Contacts_CompanyId",
                 table: "Contacts",
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StoredImage_UploaderId",
-                table: "StoredImage",
+                name: "IX_Images_CompanyId",
+                table: "Images",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Images_UploaderId",
+                table: "Images",
                 column: "UploaderId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_ActivityCompany_Companies_CompaniesCompanyId",
+                table: "ActivityCompany",
+                column: "CompaniesCompanyId",
+                principalTable: "Companies",
+                principalColumn: "CompanyId",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_BranchCompany_Companies_CompaniesCompanyId",
+                table: "BranchCompany",
+                column: "CompaniesCompanyId",
+                principalTable: "Companies",
+                principalColumn: "CompanyId",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Companies_Images_LogoId",
+                table: "Companies",
+                column: "LogoId",
+                principalTable: "Images",
+                principalColumn: "ImageId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Images_Companies_CompanyId",
+                table: "Images");
+
             migrationBuilder.DropTable(
                 name: "ActivityCompany");
 
@@ -463,6 +532,9 @@ namespace BurzaFirem2.Migrations
                 name: "BranchCompany");
 
             migrationBuilder.DropTable(
+                name: "CompanyListing");
+
+            migrationBuilder.DropTable(
                 name: "Contacts");
 
             migrationBuilder.DropTable(
@@ -475,10 +547,13 @@ namespace BurzaFirem2.Migrations
                 name: "Branches");
 
             migrationBuilder.DropTable(
+                name: "Listing");
+
+            migrationBuilder.DropTable(
                 name: "Companies");
 
             migrationBuilder.DropTable(
-                name: "StoredImage");
+                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

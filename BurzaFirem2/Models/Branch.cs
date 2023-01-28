@@ -15,5 +15,6 @@ namespace BurzaFirem2.Models
         public string TextColor { get; set; } = "#000000";
         [JsonIgnore]
         public ICollection<Company> Companies { get; set; }
+        public bool Visible { get; set; } = true;
     }
 }

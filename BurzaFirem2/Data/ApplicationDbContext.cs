@@ -25,15 +25,20 @@ namespace BurzaFirem2.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Company>().HasOne(c => c.Logo).WithOne(i => i.Company).HasForeignKey<Company>(c => c.LogoId);
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 1, Name = "IT", BackgroundColor = "#D90000" });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 2, Name = "Strojírenství", BackgroundColor = "#357BC2" });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 3, Name = "Elektrotechnika", BackgroundColor = "#00AA80" });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 4, Name = "Lyceum", BackgroundColor = "#ECB100" });
-            modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 1, Name = "Exkurze" });
-            modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 2, Name = "Čtrnáctidenní praxe" });
-            modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 3, Name = "Dlouhodobá praxe" });
-            modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 4, Name = "Brigáda" });
+            modelBuilder.Entity<Company>(entity =>
+            {
+                entity.HasOne(c => c.Logo).WithOne(i => i.CompanyLogo).HasForeignKey<Company>(c => c.LogoId);
+                entity.HasMany(c => c.Images).WithOne(i => i.Company).HasForeignKey(i => i.CompanyId).OnDelete(DeleteBehavior.Restrict);
+            });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 1, Name = "IT", BackgroundColor = "#D90000", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 2, Name = "Strojírenství", BackgroundColor = "#357BC2", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 3, Name = "Elektrotechnika", BackgroundColor = "#00AA80", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 4, Name = "Lyceum", BackgroundColor = "#ECB100", Visible = true });
+            modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 1, Name = "Exkurze", Visible = true });
+            modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 2, Name = "Čtrnáctidenní praxe", Visible = true });
+            modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 3, Name = "Dlouhodobá praxe", Visible = true });
+            modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 4, Name = "Brigáda", Visible = true });
+            modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 5, Name = "Zaměstnání", Visible = true });
             var hasher = new PasswordHasher<ApplicationUser>();
             modelBuilder.Entity<IdentityRole<Guid>>(entity =>
             {
@@ -91,5 +96,7 @@ namespace BurzaFirem2.Data
                 });
             });
         }
+
+        public DbSet<BurzaFirem2.Models.Listing> Listing { get; set; }
     }
 }

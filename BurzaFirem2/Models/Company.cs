@@ -22,6 +22,9 @@ namespace BurzaFirem2.Models
         public ICollection<Branch> Branches { get; set; } = new List<Branch>();
         public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
         public ICollection<Activity> Activities { get; set; } = new List<Activity>();
+        public ICollection<StoredImage> Images { get; set; } = new List<StoredImage>();
+        public ICollection<Listing> Listings { get; set; } = new List<Listing>();
+
         [Required]
         public Guid UserId { get; set; } 
         [Required]
