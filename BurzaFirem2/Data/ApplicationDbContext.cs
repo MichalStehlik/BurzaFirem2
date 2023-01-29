@@ -16,6 +16,7 @@ namespace BurzaFirem2.Data
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Models.Activity> Activities { get; set; }
         public DbSet<StoredImage> Images { get; set; }
+        public DbSet<Listing> Listings { get; set; }
 
         public ApplicationDbContext(DbContextOptions options, ILogger<ApplicationDbContext> logger) : base(options)
         {

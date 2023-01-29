@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BurzaFirem2.Data;
 using BurzaFirem2.Models;
 using Microsoft.AspNetCore.Authorization;
 using BurzaFirem2.Constants;
+using BurzaFirem2.ViewModels;
 
 namespace BurzaFirem2.Controllers.v1
 {
@@ -25,9 +21,35 @@ namespace BurzaFirem2.Controllers.v1
 
         // GET: api/Listings
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Listing>>> GetListing()
+        public async Task<ActionResult<ListVM<Listing>>> GetListing(
+            string? name = null, 
+            bool? visible = null,
+            int page = 0,
+            int pagesize = 0,
+            string? order = null
+            )
         {
-            return await _context.Listing.ToListAsync();
+            IQueryable<Listing> listings = _context.Listings;
+            int total = listings.CountAsync().Result;
+            if (!String.IsNullOrEmpty(name))
+                listings = listings.Where(i => (i.Name.Contains(name)));
+            if (visible != null)
+            {
+                listings = listings.Where(i => (i.Visible == visible));
+            }
+            int filtered = listings.CountAsync().Result;
+            listings = order switch
+            {
+                "name" => listings.OrderBy(c => c.Name),
+                "name_desc" => listings.OrderByDescending(c => c.Name),
+                _ => listings.OrderByDescending(c => c.Created)
+            };
+            if (pagesize != 0)
+            {
+                listings = listings.Skip(page * pagesize).Take(pagesize);
+            }
+            int count = listings.CountAsync().Result;
+            return new ListVM<Listing> { Total = total, Filtered = filtered, Count = count, Page = page, Pagesize = pagesize, Data = listings.ToList() };
         }
 
         // GET: api/Listings/5

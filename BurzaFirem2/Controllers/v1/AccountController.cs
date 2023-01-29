@@ -143,5 +143,52 @@ namespace BurzaFirem2.Controllers.v1
             _logger.LogError("User " + input.Id + " does not exists.");
             return NotFound();
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("send-password-recovery")]
+        public async Task<IActionResult> SendRecoveryEmailAsync(EmailIM input)
+        {
+            var user = await _um.FindByEmailAsync(input.Email);
+            if (user == null || !(await _um.IsEmailConfirmedAsync(user)))
+            {
+                var code = await _um.GeneratePasswordResetTokenAsync(user);
+                _logger.LogInformation("Recovery email for " + input.Email + " can be sent.");
+                string appUrl = HtmlEncoder.Default.Encode(Request.Scheme + "://" + Request.Host.Value);
+                string htmlBody = await _renderer.RenderViewToStringAsync("/Emails/Pages/PasswordRecovery.cshtml",
+                    new ConfirmEmailVM
+                    {
+                        ConfirmationCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code)),
+                        User = user,
+                        ConfirmEmailUrl = appUrl + "/account/password-reset?code=" + code + "&email=" + user.Email,
+                        AppUrl = appUrl
+                    });
+                await _mailer.SendEmailAsync(user.Email, "Ztracené heslo", htmlBody);
+                return Ok();
+            }
+            return BadRequest();            
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("password-reset")]
+        public async Task<IActionResult> PasswordResetAsync(ResetPasswordIM input)
+        {
+
+            var user = await _um.FindByEmailAsync(input.Email);
+            if (user == null)
+            {
+                _logger.LogError("There is no user " + input.Email + " to set a new password.");
+                return NotFound();
+            }
+            var result = await _um.ResetPasswordAsync(user, input.Code, input.Password);
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("Password for " + user.Email + " was set.");
+                return Ok();
+            }
+            _logger.LogError("Password for " + user.Email + " was not set.");
+            return BadRequest("password was not set");            
+        }
     }
 }

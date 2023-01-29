@@ -1,8 +1,14 @@
-﻿using BurzaFirem2.Data;
+﻿using BurzaFirem2.Constants;
+using BurzaFirem2.Data;
+using BurzaFirem2.InputModels;
 using BurzaFirem2.Models;
 using BurzaFirem2.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,11 +20,13 @@ namespace BurzaFirem2.Controllers.v1
     {
         private readonly ApplicationDbContext _context;
         private ILogger<UsersController> _logger;
+        private readonly UserManager<ApplicationUser> _um;
 
-        public UsersController(ApplicationDbContext context, ILogger<UsersController> logger)
+        public UsersController(ApplicationDbContext context, ILogger<UsersController> logger, UserManager<ApplicationUser> um)
         {
             _context = context;
             _logger = logger;
+            _um = um;
         }
 
         // GET: api/v1/<UsersController>
@@ -61,15 +69,36 @@ namespace BurzaFirem2.Controllers.v1
 
         // GET api/v1/<UsersController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<UserVM>> GetUser(Guid id)
         {
-            return "value";
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new UserVM { Id = user.Id, UserName = user.UserName, Email = user.Email, EmailConfirmed = user.EmailConfirmed });
         }
 
         // POST api/<UsersController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Authorize(Policy = Security.ADMIN_POLICY)]
+        public async Task<IActionResult>CreateUser([FromBody] RegisterIM values)
         {
+            ApplicationUser user = new ApplicationUser
+            {
+                UserName = values.Email,
+                Email = values.Email,
+                Created = DateTime.Now,
+                Updated = DateTime.Now,
+            };
+            var result = await _um.CreateAsync(user, values.Password);
+            if (result.Succeeded)
+            {
+                return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            }
+            return BadRequest();
         }
 
         // PUT api/<UsersController>/5
