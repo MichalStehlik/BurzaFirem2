@@ -1,41 +1,196 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Spinner, Alert, ListGroup, ListGroupItem, Badge, Button, Input, Form } from 'reactstrap';
+import axios from "axios"
+import { Link } from 'react-router-dom'
 
 export const Home = () =>  {
     const [data, setData] = useState(null)
     const [error, setError] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const [branches, setBranches] = useState(null);
-    const [errorActivities, setErrorActivities] = useState(false)
-    const [isLoadingActivities, setIsLoadingActivities] = useState(false)
-    const [activities, setActivities] = useState(null);
     const [selectedBranches, setSelectedBranches] = useState([]);
-    const [isLoadingBranches, setIsLoadingBranches] = useState(false);
-    const [errorBranches, setErrorBranches] = useState(false);
     const [selectedActivities, setSelectedActivities] = useState([]);
     const [name, setName] = useState("");
-    const fetchBranches = () => {
-        setIsLoadingBranches(true);
-        setErrorBranches(false);
 
-    }
+    useEffect(() => {
+      const fetchCompanies = (selectedBranches, selectedActivities, name) => {
+        setIsLoading(true);
+        let headers = {
+          "Content-Type": "application/json"
+        }  
+        axios.get("/api/v1/companies", { headers: headers, params: {order: "name", branches: selectedBranches.join(","), activities: selectedActivities.join(","), name} })
+        .then(response => { 
+            setData(response.data.data);
+            setError(null); 
+        })
+        .catch(error => {
+          setData(null);
+          if (error.response) {
+              setError({status: error.response.status, text: error.response.statusText})
+          } else {
+              setError({status: 0, text: "??"});
+          }
+        })
+        .then(()=>{
+            setIsLoading(false)
+        })
+      };
+
+      fetchCompanies(selectedBranches, selectedActivities, name);
+    }, [selectedBranches, selectedActivities, name])
+
     return (
-      <div>
-        <h1>Hello, world!</h1>
-        <p>Welcome to your new single-page application, built with:</p>
-        <ul>
-          <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-          <li><a href='https://facebook.github.io/react/'>React</a> for client-side code</li>
-          <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-        </ul>
-        <p>To help you get started, we have also set up:</p>
-        <ul>
-          <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-          <li><strong>Development server integration</strong>. In development mode, the development server from <code>create-react-app</code> runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-          <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration produces minified, efficiently bundled JavaScript files.</li>
-        </ul>
-        <p>The <code>ClientApp</code> subdirectory is a standard React application based on the <code>create-react-app</code> template. If you open a command prompt in that directory, you can run <code>npm</code> commands such as <code>npm test</code> or <code>npm install</code>.</p>
-      </div>
+      <>
+        <FilterForm 
+          selectedBranches={selectedBranches} 
+          setSelectedBranches={setSelectedBranches} 
+          selectedActivities={selectedActivities} 
+          setSelectedActivities={setSelectedActivities} 
+          name={name} 
+          setName={setName} 
+        />
+        {isLoading
+        ?
+                <div className="text-center p-3"><Spinner className="m-2"> </Spinner></div>
+        :
+            error 
+            ?
+            <Alert color="danger">Při získávání dat došlo k chybě.</Alert>
+            :
+                data
+                ?
+                    data.length > 0
+                    ?
+                    <ListGroup>
+                    {data.map((item, index) => (
+                        <ListGroupItem key={index} tag={Link} to={"/" + item.companyId}>{item.name}
+                            {item.branches.map((item, index) => (<Badge key={ index } style={{backgroundColor: `${item.backgroundColor}`, color: `${item.textColor}`, marginLeft: 5}}>{item.name.substr(0,3)}</Badge>))}
+                        </ListGroupItem>
+                    ))}
+                    </ListGroup>
+                    :
+                    <Alert color="info" className="mt-2">Filtru neodpovídají žádné firmy.</Alert>
+                :
+                null
+        }
+      </>
     );
+}
+
+const FilterForm = ({selectedBranches, setSelectedBranches, selectedActivities, setSelectedActivities, name, setName}) => {
+  const [branches, setBranches] = useState(null);
+  const [errorActivities, setErrorActivities] = useState(false)
+  const [isLoadingActivities, setIsLoadingActivities] = useState(false)
+  const [activities, setActivities] = useState(null);
+  const [isLoadingBranches, setIsLoadingBranches] = useState(false);
+  const [errorBranches, setErrorBranches] = useState(false);
+
+  const fetchBranches = () => {
+    setIsLoadingBranches(true);
+    setErrorBranches(false);
+    axios.get("/api/v1/branches",{
+        headers: {
+            "Content-Type": "application/json"
+        } 
+    })
+    .then(response => {
+        setBranches(response.data);
+    })
+    .catch(error => {
+        if (error.response) {
+            setErrorBranches({status: error.response.status, text: error.response.statusText});
+        }
+        else
+        {
+            setErrorBranches({status: 0, text: "Neznámá chyba"});
+        }         
+        setBranches([]);
+    });
+    setIsLoadingBranches(false);
+  };
+
+  const fetchActivities = () => {
+    setIsLoadingActivities(true);
+    setErrorActivities(false);
+    axios.get("/api/v1/activities",{
+        headers: {
+            "Content-Type": "application/json"
+        } 
+    })
+    .then(response => {
+        setActivities(response.data);
+    })
+    .catch(error => {
+        if (error.response) {
+            setErrorActivities({status: error.response.status, text: error.response.statusText});
+        }
+        else
+        {
+            setErrorActivities({status: 0, text: "Neznámá chyba"});
+        }         
+        setActivities([]);
+    })
+    .then(() => {
+        setIsLoadingActivities(false);
+    })      
+  };
+
+  const toggleSelectedBranches = (id) => {
+    let newSelectedBranches = [...selectedBranches];
+    if (newSelectedBranches.includes(id))
+    {
+        var index = newSelectedBranches.indexOf(id);
+        if (index !== -1) {
+            newSelectedBranches.splice(index, 1);
+        }
+    }
+    else
+    {
+        newSelectedBranches.push(id);
+    }
+    setSelectedBranches(newSelectedBranches);
+  }
+
+  const toggleSelectedActivities = (id) => {
+    let newSelectedActivities = [...selectedActivities];
+    if (newSelectedActivities.includes(id))
+    {
+        var index = newSelectedActivities.indexOf(id);
+        if (index !== -1) {
+            newSelectedActivities.splice(index, 1);
+        }
+    }
+    else
+    {
+        newSelectedActivities.push(id);
+    }
+    setSelectedActivities(newSelectedActivities);
+  }
+
+  useEffect(() => {
+    fetchBranches();
+    fetchActivities();
+  },[fetchBranches, fetchActivities])
+
+
+  if (branches && activities) {
+    return (
+      <Form inline>
+          <Input onChange={e => {setName(e.target.value)}} value={name} placeholder="Název nebo jeho část" />
+          {branches.map((item, index) => (
+              <Button key={index} className="m-1" style={
+                  selectedBranches.includes(item.branchId)
+                      ?
+                      { color: `{item.backgroundColor}`, backgroundColor: "{item.textColor}" }
+                      :
+                      { color: `{item.textColor}`, backgroundColor: "{item.backgroundColor}" }
+              } outline={!selectedBranches.includes(item.branchId)} onClick={e => { toggleSelectedBranches(item.branchId) }} size="sm">{item.name}</Button>
+          ))}
+          {activities.map((item, index) => (
+              <Button key={index} className="m-1" outline={!selectedActivities.includes(item.activityId)} onClick={e => {toggleSelectedActivities(item.activityId)}} size="sm">{item.name}</Button>
+          ))}
+      </Form>
+    );
+  }
 }
 
 export default Home;
