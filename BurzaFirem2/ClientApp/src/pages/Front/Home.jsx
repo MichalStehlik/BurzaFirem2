@@ -84,56 +84,6 @@ const FilterForm = ({selectedBranches, setSelectedBranches, selectedActivities, 
   const [isLoadingBranches, setIsLoadingBranches] = useState(false);
   const [errorBranches, setErrorBranches] = useState(false);
 
-  const fetchBranches = () => {
-    setIsLoadingBranches(true);
-    setErrorBranches(false);
-    axios.get("/api/v1/branches",{
-        headers: {
-            "Content-Type": "application/json"
-        } 
-    })
-    .then(response => {
-        setBranches(response.data);
-    })
-    .catch(error => {
-        if (error.response) {
-            setErrorBranches({status: error.response.status, text: error.response.statusText});
-        }
-        else
-        {
-            setErrorBranches({status: 0, text: "Neznámá chyba"});
-        }         
-        setBranches([]);
-    });
-    setIsLoadingBranches(false);
-  };
-
-  const fetchActivities = () => {
-    setIsLoadingActivities(true);
-    setErrorActivities(false);
-    axios.get("/api/v1/activities",{
-        headers: {
-            "Content-Type": "application/json"
-        } 
-    })
-    .then(response => {
-        setActivities(response.data);
-    })
-    .catch(error => {
-        if (error.response) {
-            setErrorActivities({status: error.response.status, text: error.response.statusText});
-        }
-        else
-        {
-            setErrorActivities({status: 0, text: "Neznámá chyba"});
-        }         
-        setActivities([]);
-    })
-    .then(() => {
-        setIsLoadingActivities(false);
-    })      
-  };
-
   const toggleSelectedBranches = (id) => {
     let newSelectedBranches = [...selectedBranches];
     if (newSelectedBranches.includes(id))
@@ -166,10 +116,57 @@ const FilterForm = ({selectedBranches, setSelectedBranches, selectedActivities, 
     setSelectedActivities(newSelectedActivities);
   }
 
-  useEffect(() => {
+    useEffect(() => {
+        const fetchBranches = () => {
+            setIsLoadingBranches(true);
+            setErrorBranches(false);
+            axios.get("/api/v1/branches", {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => {
+                    setBranches(response.data);
+                })
+                .catch(error => {
+                    if (error.response) {
+                        setErrorBranches({ status: error.response.status, text: error.response.statusText });
+                    }
+                    else {
+                        setErrorBranches({ status: 0, text: "Neznámá chyba" });
+                    }
+                    setBranches([]);
+                });
+            setIsLoadingBranches(false);
+        };
+
+        const fetchActivities = () => {
+            setIsLoadingActivities(true);
+            setErrorActivities(false);
+            axios.get("/api/v1/activities", {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => {
+                    setActivities(response.data);
+                })
+                .catch(error => {
+                    if (error.response) {
+                        setErrorActivities({ status: error.response.status, text: error.response.statusText });
+                    }
+                    else {
+                        setErrorActivities({ status: 0, text: "Neznámá chyba" });
+                    }
+                    setActivities([]);
+                })
+                .then(() => {
+                    setIsLoadingActivities(false);
+                })
+        };
     fetchBranches();
     fetchActivities();
-  },[fetchBranches, fetchActivities])
+  },[])
 
 
   if (branches && activities) {

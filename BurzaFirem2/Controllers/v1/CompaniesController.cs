@@ -33,11 +33,11 @@ namespace BurzaFirem2.Controllers.v1
         // GET: api/v1/Companies
         [HttpGet]
         public async Task<ActionResult<ListVM<Company>>> GetCompanies(
-            string search,
-            string order,
-            string name,
-            string branches,
-            string activities,
+            string? search,
+            string? order,
+            string? name,
+            string? branches,
+            string? activities,
             int? listing = null,
             int page = 0,
             int pagesize = 0
