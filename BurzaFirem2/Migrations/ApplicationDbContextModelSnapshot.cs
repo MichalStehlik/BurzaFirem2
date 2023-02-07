@@ -17,10 +17,10 @@ namespace BurzaFirem2.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.2")
+                .HasAnnotation("ProductVersion", "6.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("ActivityCompany", b =>
                 {
@@ -58,7 +58,7 @@ namespace BurzaFirem2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ActivityId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ActivityId"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -180,18 +180,18 @@ namespace BurzaFirem2.Migrations
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fbe4e7cb-0910-4eaf-b118-4ae6f2bc7df0",
-                            Created = new DateTime(2023, 1, 28, 21, 36, 1, 880, DateTimeKind.Local).AddTicks(8118),
+                            ConcurrencyStamp = "329745b5-22ab-40ad-9a68-0d2281c6684b",
+                            Created = new DateTime(2023, 2, 7, 15, 46, 0, 824, DateTimeKind.Local).AddTicks(8736),
                             Email = "burza@pslib.cz",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "BURZA@PSLIB.CZ",
                             NormalizedUserName = "BURZA@PSLIB.CZ",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMDiHJo2Bu2dWACbu4+1zUdFdJIhVZtzzZaJcPWFk7804+pqGQz+xMOwjWpVlNHwhw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKdAVQgMsRvV0AbD8BWZJkJeKDa4vIM9wDlWNg3LZlCzXZ5pLtYaM6IOEG2hsNiAjA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI",
                             TwoFactorEnabled = false,
-                            Updated = new DateTime(2023, 1, 28, 21, 36, 1, 880, DateTimeKind.Local).AddTicks(8167),
+                            Updated = new DateTime(2023, 2, 7, 15, 46, 0, 824, DateTimeKind.Local).AddTicks(8781),
                             UserName = "burza@pslib.cz"
                         });
                 });
@@ -202,7 +202,11 @@ namespace BurzaFirem2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BranchId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BranchId"), 1L, 1);
+
+                    b.Property<string>("BackgroundColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -223,29 +227,33 @@ namespace BurzaFirem2.Migrations
                         new
                         {
                             BranchId = 1,
+                            BackgroundColor = "#D90000",
                             Name = "IT",
-                            TextColor = "#000000",
+                            TextColor = "#FFFFFF",
                             Visible = true
                         },
                         new
                         {
                             BranchId = 2,
+                            BackgroundColor = "#357BC2",
                             Name = "Strojírenství",
-                            TextColor = "#000000",
+                            TextColor = "#FFFFFF",
                             Visible = true
                         },
                         new
                         {
                             BranchId = 3,
+                            BackgroundColor = "#00AA80",
                             Name = "Elektrotechnika",
-                            TextColor = "#000000",
+                            TextColor = "#FFFFFF",
                             Visible = true
                         },
                         new
                         {
                             BranchId = 4,
+                            BackgroundColor = "#ECB100",
                             Name = "Lyceum",
-                            TextColor = "#000000",
+                            TextColor = "#FFFFFF",
                             Visible = true
                         });
                 });
@@ -256,25 +264,22 @@ namespace BurzaFirem2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CompanyId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CompanyId"), 1L, 1);
 
                     b.Property<string>("AddressStreet")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CompanyBranches")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CompanyUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("LogoId")
@@ -289,11 +294,9 @@ namespace BurzaFirem2.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Offer")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PresentationUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Updated")
@@ -303,7 +306,6 @@ namespace BurzaFirem2.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Wanted")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CompanyId");
@@ -323,7 +325,7 @@ namespace BurzaFirem2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContactId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContactId"), 1L, 1);
 
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
@@ -353,7 +355,7 @@ namespace BurzaFirem2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ListingId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ListingId"), 1L, 1);
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -454,12 +456,14 @@ namespace BurzaFirem2.Migrations
                         new
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111110000"),
+                            ConcurrencyStamp = "80e1cdf3-2f78-467c-a8c0-78a1c5f96e7f",
                             Name = "Administrátor",
                             NormalizedName = "ADMINISTRÁTOR"
                         },
                         new
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222220000"),
+                            ConcurrencyStamp = "00ec09d1-1c40-4578-88d2-f2f407e7f6d8",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });
@@ -471,7 +475,7 @@ namespace BurzaFirem2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -511,7 +515,7 @@ namespace BurzaFirem2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");

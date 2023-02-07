@@ -10,7 +10,6 @@ namespace BurzaFirem2.Models
         public int BranchId { get; set; }
         [Required]
         public string Name { get; set; } = String.Empty;
-        [NotMapped]
         public string BackgroundColor { get; set; } = "#ffffff";
         public string TextColor { get; set; } = "#000000";
         [JsonIgnore]

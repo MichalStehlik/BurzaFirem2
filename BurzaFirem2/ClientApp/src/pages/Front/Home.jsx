@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Spinner, Alert, ListGroup, ListGroupItem, Badge, Button, Input, Form } from 'reactstrap';
 import axios from "axios"
 import { Link } from 'react-router-dom'
@@ -9,10 +9,11 @@ export const Home = () =>  {
     const [isLoading, setIsLoading] = useState(false)
     const [selectedBranches, setSelectedBranches] = useState([]);
     const [selectedActivities, setSelectedActivities] = useState([]);
+    const [selectedList, setSelectedList] = useState([]);
     const [name, setName] = useState("");
 
-    useEffect(() => {
-      const fetchCompanies = (selectedBranches, selectedActivities, name) => {
+    const fetchCompanies = useCallback(
+        (selectedBranches, selectedActivities, name) => {
         setIsLoading(true);
         let headers = {
           "Content-Type": "application/json"
@@ -33,10 +34,11 @@ export const Home = () =>  {
         .then(()=>{
             setIsLoading(false)
         })
-      };
+    },[]);
 
+    useEffect(() => {
       fetchCompanies(selectedBranches, selectedActivities, name);
-    }, [selectedBranches, selectedActivities, name])
+    }, [selectedBranches, selectedActivities, name, fetchCompanies])
 
     return (
       <>
@@ -50,7 +52,7 @@ export const Home = () =>  {
         />
         {isLoading
         ?
-                <div className="text-center p-3"><Spinner className="m-2"> </Spinner></div>
+            <div className="text-center p-3"><Spinner className="m-2"> </Spinner></div>
         :
             error 
             ?
@@ -120,7 +122,7 @@ const FilterForm = ({selectedBranches, setSelectedBranches, selectedActivities, 
         const fetchBranches = () => {
             setIsLoadingBranches(true);
             setErrorBranches(false);
-            axios.get("/api/v1/branches", {
+            axios.get("/api/v1/branches?visible=true", {
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -143,7 +145,7 @@ const FilterForm = ({selectedBranches, setSelectedBranches, selectedActivities, 
         const fetchActivities = () => {
             setIsLoadingActivities(true);
             setErrorActivities(false);
-            axios.get("/api/v1/activities", {
+            axios.get("/api/v1/activities?visible=true", {
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -173,18 +175,39 @@ const FilterForm = ({selectedBranches, setSelectedBranches, selectedActivities, 
     return (
       <Form inline>
           <Input onChange={e => {setName(e.target.value)}} value={name} placeholder="Název nebo jeho část" />
-          {branches.map((item, index) => (
-              <Button key={index} className="m-1" style={
-                  selectedBranches.includes(item.branchId)
-                      ?
-                      { color: `{item.backgroundColor}`, backgroundColor: "{item.textColor}" }
-                      :
-                      { color: `{item.textColor}`, backgroundColor: "{item.backgroundColor}" }
-              } outline={!selectedBranches.includes(item.branchId)} onClick={e => { toggleSelectedBranches(item.branchId) }} size="sm">{item.name}</Button>
-          ))}
-          {activities.map((item, index) => (
-              <Button key={index} className="m-1" outline={!selectedActivities.includes(item.activityId)} onClick={e => {toggleSelectedActivities(item.activityId)}} size="sm">{item.name}</Button>
-          ))}
+          {branches.map((item, index) => {
+            if (item.visible)
+            return (
+                  <Button 
+                    key={index} 
+                    className="m-1" 
+                    outline={!selectedBranches.includes(item.branchId)} 
+                    onClick={e => { toggleSelectedBranches(item.branchId) }} 
+                    size="sm"
+                    style={
+                        selectedBranches.includes(item.branchId)
+                            ?
+                            { color: item.textColor, backgroundColor: item.backgroundColor }
+                            :
+                            { color: item.backgroundColor, backgroundColor: item.textColor }
+                        } 
+                    >{item.name}</Button>
+            );
+          }
+          )}
+          {activities.map((item, index) => {
+            if (item.visible)
+            return (
+                <Button 
+                key={index} 
+                className="m-1" 
+                outline={!selectedActivities.includes(item.activityId)} 
+                onClick={e => {toggleSelectedActivities(item.activityId)}} 
+                size="sm">{item.name}</Button>
+            );
+          }
+              
+          )}
       </Form>
     );
   }

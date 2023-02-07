@@ -31,10 +31,10 @@ namespace BurzaFirem2.Data
                 entity.HasOne(c => c.Logo).WithOne(i => i.CompanyLogo).HasForeignKey<Company>(c => c.LogoId);
                 entity.HasMany(c => c.Images).WithOne(i => i.Company).HasForeignKey(i => i.CompanyId).OnDelete(DeleteBehavior.Restrict);
             });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 1, Name = "IT", BackgroundColor = "#D90000", Visible = true });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 2, Name = "Strojírenství", BackgroundColor = "#357BC2", Visible = true });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 3, Name = "Elektrotechnika", BackgroundColor = "#00AA80", Visible = true });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 4, Name = "Lyceum", BackgroundColor = "#ECB100", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 1, Name = "IT", BackgroundColor = "#D90000", TextColor="#FFFFFF", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 2, Name = "Strojírenství", BackgroundColor = "#357BC2", TextColor = "#FFFFFF", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 3, Name = "Elektrotechnika", BackgroundColor = "#00AA80", TextColor = "#FFFFFF", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 4, Name = "Lyceum", BackgroundColor = "#ECB100", TextColor = "#FFFFFF", Visible = true });
             modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 1, Name = "Exkurze", Visible = true });
             modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 2, Name = "Čtrnáctidenní praxe", Visible = true });
             modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 3, Name = "Dlouhodobá praxe", Visible = true });

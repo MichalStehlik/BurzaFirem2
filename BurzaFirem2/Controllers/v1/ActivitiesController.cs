@@ -24,9 +24,13 @@ namespace BurzaFirem2.Controllers.v1
 
         // GET: api/<ActivitiesController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Activity>>> GetActivities()
+        public async Task<ActionResult<IEnumerable<Activity>>> GetActivities(bool? visible)
         {
-            return await _context.Activities.ToListAsync();
+            IQueryable<Activity> activities = _context.Activities;
+            if (visible != null)
+                activities = activities.Where(i => (i.Visible == visible));
+            activities = activities.OrderBy(i => i.Name);
+            return await activities.ToListAsync();
         }
 
         // GET api/<ActivitiesController>/5

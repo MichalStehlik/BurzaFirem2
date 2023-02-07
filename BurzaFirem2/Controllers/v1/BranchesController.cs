@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph.SecurityNamespace;
 
 namespace BurzaFirem2.Controllers.v1
 {
@@ -24,9 +25,13 @@ namespace BurzaFirem2.Controllers.v1
 
         // GET: api/Branches
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Branch>>> GetBranches()
+        public async Task<ActionResult<IEnumerable<Branch>>> GetBranches(bool? visible)
         {
-            return await _context.Branches.OrderBy(b => b.Name).ToListAsync();
+            IQueryable<Branch> branches = _context.Branches;
+            if (visible != null)
+                branches = branches.Where(i => (i.Visible == visible));
+            branches = branches.OrderBy(i => i.Name);
+            return await branches.ToListAsync();
         }
 
         // GET: api/Branches/5

@@ -3,14 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace BurzaFirem2.Migrations
 {
-    /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -75,6 +71,7 @@ namespace BurzaFirem2.Migrations
                     BranchId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BackgroundColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TextColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Visible = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -248,14 +245,14 @@ namespace BurzaFirem2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LogoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Wanted = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Offer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Wanted = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Offer = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AddressStreet = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Municipality = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PresentationUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyBranches = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CompanyUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PresentationUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CompanyBranches = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -364,34 +361,35 @@ namespace BurzaFirem2.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("11111111-1111-1111-1111-111111110000"), null, "Administrátor", "ADMINISTRÁTOR" },
-                    { new Guid("22222222-2222-2222-2222-222222220000"), null, "Editor", "EDITOR" }
+                    { new Guid("11111111-1111-1111-1111-111111110000"), "80e1cdf3-2f78-467c-a8c0-78a1c5f96e7f", "Administrátor", "ADMINISTRÁTOR" },
+                    { new Guid("22222222-2222-2222-2222-222222220000"), "00ec09d1-1c40-4578-88d2-f2f407e7f6d8", "Editor", "EDITOR" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Created", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "Updated", "UserName" },
-                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, "fbe4e7cb-0910-4eaf-b118-4ae6f2bc7df0", new DateTime(2023, 1, 28, 21, 36, 1, 880, DateTimeKind.Local).AddTicks(8118), "burza@pslib.cz", true, false, null, "BURZA@PSLIB.CZ", "BURZA@PSLIB.CZ", "AQAAAAIAAYagAAAAEMDiHJo2Bu2dWACbu4+1zUdFdJIhVZtzzZaJcPWFk7804+pqGQz+xMOwjWpVlNHwhw==", null, false, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 1, 28, 21, 36, 1, 880, DateTimeKind.Local).AddTicks(8167), "burza@pslib.cz" });
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, "329745b5-22ab-40ad-9a68-0d2281c6684b", new DateTime(2023, 2, 7, 15, 46, 0, 824, DateTimeKind.Local).AddTicks(8736), "burza@pslib.cz", true, false, null, "BURZA@PSLIB.CZ", "BURZA@PSLIB.CZ", "AQAAAAEAACcQAAAAEKdAVQgMsRvV0AbD8BWZJkJeKDa4vIM9wDlWNg3LZlCzXZ5pLtYaM6IOEG2hsNiAjA==", null, false, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 2, 7, 15, 46, 0, 824, DateTimeKind.Local).AddTicks(8781), "burza@pslib.cz" });
 
             migrationBuilder.InsertData(
                 table: "Branches",
-                columns: new[] { "BranchId", "Name", "TextColor", "Visible" },
+                columns: new[] { "BranchId", "BackgroundColor", "Name", "TextColor", "Visible" },
                 values: new object[,]
                 {
-                    { 1, "IT", "#000000", true },
-                    { 2, "Strojírenství", "#000000", true },
-                    { 3, "Elektrotechnika", "#000000", true },
-                    { 4, "Lyceum", "#000000", true }
+                    { 1, "#D90000", "IT", "#FFFFFF", true },
+                    { 2, "#357BC2", "Strojírenství", "#FFFFFF", true },
+                    { 3, "#00AA80", "Elektrotechnika", "#FFFFFF", true },
+                    { 4, "#ECB100", "Lyceum", "#FFFFFF", true }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
-                values: new object[,]
-                {
-                    { 1, "admin", "1", new Guid("11111111-1111-1111-1111-111111110000") },
-                    { 2, "editor", "1", new Guid("22222222-2222-2222-2222-222222220000") }
-                });
+                values: new object[] { 1, "admin", "1", new Guid("11111111-1111-1111-1111-111111110000") });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoleClaims",
+                columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
+                values: new object[] { 2, "editor", "1", new Guid("22222222-2222-2222-2222-222222220000") });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -503,7 +501,6 @@ namespace BurzaFirem2.Migrations
                 principalColumn: "ImageId");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
