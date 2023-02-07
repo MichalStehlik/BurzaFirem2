@@ -61,12 +61,12 @@ namespace BurzaFirem2.Data
                 entity.HasData(new ApplicationUser
                 {
                     Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-                    Email = "burza@pslib.cz",
-                    NormalizedEmail = "BURZA@PSLIB.CZ",
-                    UserName = "burza@pslib.cz",
+                    Email = "jobs@pslib.cz",
+                    NormalizedEmail = "JOBS@PSLIB.CZ",
+                    UserName = "jobs@pslib.cz",
                     PasswordHash = hasher.HashPassword(null, "Admin_1234"),
                     SecurityStamp = "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI",
-                    NormalizedUserName = "BURZA@PSLIB.CZ",
+                    NormalizedUserName = "JOBS@PSLIB.CZ",
                     EmailConfirmed = true,
                 });
             });
@@ -93,6 +93,37 @@ namespace BurzaFirem2.Data
                     {
                         UserId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                         RoleId = Guid.Parse("11111111-1111-1111-1111-111111110000")
+                    });
+                });
+                modelBuilder.Entity<Listing>(entity =>
+                {
+                    entity.HasData(new Listing
+                    {
+                        ListingId = 1,
+                        Name = "2022",
+                        Created = DateTime.Now
+                    });
+                    entity.HasData(new Listing
+                    {
+                        ListingId = 2,
+                        Name = "2023",
+                        Created = DateTime.Now
+                    });
+                });
+                modelBuilder.Entity<Company>(entity =>
+                {
+                    entity.HasData(new Company
+                    {
+                        CompanyId = 1,
+                        Name = "HARDWARIO s.r.o.",
+                        Offer = "<p>Naším hlavním benefitem je to, že se vám u nás rozvinou vaše znalosti elektroniky a vývoje software a firmware, a to prací na reálných projektech.</p>",
+                        Wanted = "<p>Kluky i holky, kteří se chtějí podílet vývoji IoT řešení, která se uplatňují na celém světě. U nás nebudete uklízet a třídit, ale budete pracovat na skutečném vývoji a výrobě elektroniky.</p>",
+                        AddressStreet = "U Jezu 525/4",
+                        Municipality = "Liberec 460 01",
+                        CompanyUrl = "https://www.hardwario.com/",
+                        UserId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                        Created = DateTime.Now,
+                        Updated = DateTime.Now
                     });
                 });
             });

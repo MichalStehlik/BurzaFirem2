@@ -1,9 +1,11 @@
-import React, { createContext, useReducer, useContext } from "react";
+import React, { createContext, useReducer, useContext, useEffect } from "react";
 
 export const SET_ACCESS_TOKEN = "SET_ACCESS_TOKEN";
 export const CLEAR_ACCESS_TOKEN = "CLEAR_ACCESS_TOKEN";
 
-const parseJwt = token => {
+const TOKEN_KEY = "TOKEN_KEY";
+
+const parseJwt = (token) => {
     const base64Url = token.split(".")[1];
     const base64 = base64Url.replace("-", "+").replace("_", "/");
     return JSON.parse(window.atob(base64));
@@ -33,6 +35,22 @@ export const AuthProvider = props => {
         reducer,
         initialState
     );
+    const [state, dispatch] = store;
+    useEffect(()=>{
+        let data = sessionStorage.getItem(TOKEN_KEY);
+        if (data) {
+            dispatch({type: SET_ACCESS_TOKEN, payload: data});
+        }
+    },[dispatch]);
+    useEffect(()=>{
+        if (state.accessToken === null) {
+            sessionStorage.clear();
+        }
+        else
+        {
+            sessionStorage.setItem(TOKEN_KEY, state.accessToken);
+        }     
+    },[state]);
     return (
         <AuthContext.Provider value={store}>
             {props.children}

@@ -65,7 +65,7 @@ export const Home = () =>  {
                     <ListGroup>
                     {data.map((item, index) => (
                         <ListGroupItem key={index} tag={Link} to={"/" + item.companyId}>{item.name}
-                            {item.branches.map((item, index) => (<Badge key={ index } style={{backgroundColor: `${item.backgroundColor}`, color: `${item.textColor}`, marginLeft: 5}}>{item.name.substr(0,3)}</Badge>))}
+                            {item.branches.map((item, index) => (<Badge key={ index } color="" style={{backgroundColor: item.backgroundColor, color: item.textColor, marginLeft: 5}}>{item.name.substr(0,3)}</Badge>))}
                         </ListGroupItem>
                     ))}
                     </ListGroup>

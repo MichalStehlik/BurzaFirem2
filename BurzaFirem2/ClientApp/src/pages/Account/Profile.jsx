@@ -1,18 +1,15 @@
-import { useAuthContext } from "../../providers/AuthProvider"
-import {Link} from "react-router-dom"
+import { useAuthContext } from "../../providers/AuthProvider";
 
-
-export const Dashboard = () => {
+export const Profile = () => {
     const [{ profile, accessToken }] = useAuthContext();
     return (
         <>
             <p>Profile</p>
             <pre>{accessToken}</pre>
             <pre>{JSON.stringify(profile," ",4)}</pre>
-            <Link to="companies">Firmy</Link>
         </>
         
     );
 }
 
-export default Dashboard;
+export default Profile;

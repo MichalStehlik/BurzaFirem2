@@ -3,7 +3,7 @@ import { Outlet, Link } from "react-router-dom"
 import { Collapse, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, Container } from 'reactstrap'
 import { useAppContext } from "../../providers/AppProvider"
 
-export const AdminLayout = () => {
+export const AccountLayout = () => {
     const [{config}] = useAppContext();
     const [navbarOpen, setNavbarOpen] = useState(false);
     return (
@@ -15,7 +15,7 @@ export const AdminLayout = () => {
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={navbarOpen} navbar>
             <ul className="navbar-nav flex-grow">
               <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/admin/companies">Firmy</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/">Titulní stránka</NavLink>
               </NavItem>
             </ul>
             </Collapse>
@@ -28,4 +28,4 @@ export const AdminLayout = () => {
     );
 }
 
-export default AdminLayout;
+export default AccountLayout;

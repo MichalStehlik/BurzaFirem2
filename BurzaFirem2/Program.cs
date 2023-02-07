@@ -27,11 +27,11 @@ builder.Logging.AddSerilog(sLog);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddOptions();
-builder.Services.AddScoped<TokenService>();
 builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("JWT"));
+builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<RazorViewToStringRenderer>();
-builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -115,6 +115,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
