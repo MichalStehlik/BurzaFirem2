@@ -94,6 +94,7 @@ namespace BurzaFirem2.Controllers.v1
             _context.Entry(company).Collection(s => s.Branches).Load();
             _context.Entry(company).Collection(s => s.Activities).Load();
             _context.Entry(company).Collection(s => s.Contacts).Load();
+            _context.Entry(company).Collection(s => s.Listings).Load();
             _context.Entry(company).Reference(c => c.Logo).Load();
 
             return company;
@@ -198,6 +199,7 @@ namespace BurzaFirem2.Controllers.v1
             return NoContent();
         }
 
+        // CONTACTS
         #region Contacts
         // GET: api/Companies/1/contacts
         [HttpGet("{id}/contacts")]
@@ -517,6 +519,89 @@ namespace BurzaFirem2.Controllers.v1
             return CreatedAtAction("GetCompany", new { id = company.CompanyId }, company);
         }
 
+        #endregion
+        // LISTINGS
+        #region Listings
+        // GET: api/Companies/1/listings
+        [HttpGet("{id}/listings")]
+        public async Task<ActionResult<IEnumerable<Listing>>> GetCompanyListings(int id)
+        {
+            var company = await _context.Companies.Where(c => c.CompanyId == id).SingleOrDefaultAsync();
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            return await _context.Listings.Include(b => b.Companies).Where(b => b.Companies.Contains(new Company { CompanyId = id })).ToListAsync();
+        }
+
+        [HttpPost("{id}/listings")]
+        [Authorize(Policy = Security.EDITOR_POLICY)]
+        public async Task<ActionResult<Contact>> PostCompanyListing(int id, IdIM input)
+        {
+            var company = await _context.Companies.Where(c => c.CompanyId == id).SingleOrDefaultAsync();
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            var listing = await _context.Listings.Where(l => l.ListingId == input.Id).SingleOrDefaultAsync();
+            if (listing == null)
+            {
+                return NotFound();
+            }
+
+            var isAdmin = await _authorizationService.AuthorizeAsync(User, Security.ADMIN_POLICY);
+            if (!User.HasClaim(ClaimTypes.NameIdentifier, company.UserId.ToString()) && !isAdmin.Succeeded)
+            {
+                return Unauthorized("only owner or privileged user can edit a company record");
+            }
+
+            _context.Entry(company).Collection(s => s.Listings).Load();
+
+            if (!company.Listings.Contains(listing))
+            {
+                company.Listings.Add(listing);
+                company.Updated = DateTime.Now;
+                await _context.SaveChangesAsync();
+            }
+
+            return CreatedAtAction("GetCompany", new { id = company.CompanyId }, company);
+        }
+
+        [HttpDelete("{id}/listings/{listingId}")]
+        [Authorize(Policy = Security.EDITOR_POLICY)]
+        public async Task<ActionResult<Contact>> DeleteCompanyListing(int id, int listingId)
+        {
+            var company = await _context.Companies.Where(c => c.CompanyId == id).SingleOrDefaultAsync();
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            var listing = await _context.Listings.Where(l => l.ListingId == listingId).SingleOrDefaultAsync();
+            if (listing == null)
+            {
+                return NotFound();
+            }
+
+            var isAdmin = await _authorizationService.AuthorizeAsync(User, Security.ADMIN_POLICY);
+            if (!User.HasClaim(ClaimTypes.NameIdentifier, company.UserId.ToString()) && !isAdmin.Succeeded)
+            {
+                return Unauthorized("only owner or privileged user can edit a company record");
+            }
+
+            _context.Entry(company).Collection(s => s.Listings).Load();
+
+            if (company.Listings.Contains(listing))
+            {
+                company.Listings.Remove(listing);
+                company.Updated = DateTime.Now;
+                await _context.SaveChangesAsync();
+            }
+
+            return CreatedAtAction("GetCompany", new { id = company.CompanyId }, company);
+        }
         #endregion
     }
 }

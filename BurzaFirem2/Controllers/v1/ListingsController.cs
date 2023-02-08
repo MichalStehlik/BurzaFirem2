@@ -8,7 +8,7 @@ using BurzaFirem2.ViewModels;
 
 namespace BurzaFirem2.Controllers.v1
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ListingsController : ControllerBase
     {

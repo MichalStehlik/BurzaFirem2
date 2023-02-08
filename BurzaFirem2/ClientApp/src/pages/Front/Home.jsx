@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Spinner, Alert, ListGroup, ListGroupItem, Badge, Button, Input, Form } from 'reactstrap';
+import { Spinner, Alert, ListGroup, ListGroupItem, Badge, Button, Input, Form, ButtonGroup } from 'reactstrap';
 import axios from "axios"
 import { Link } from 'react-router-dom'
 
@@ -9,16 +9,22 @@ export const Home = () =>  {
     const [isLoading, setIsLoading] = useState(false)
     const [selectedBranches, setSelectedBranches] = useState([]);
     const [selectedActivities, setSelectedActivities] = useState([]);
-    const [selectedList, setSelectedList] = useState([]);
+    const [selectedListing, setSelectedListing] = useState([]);
     const [name, setName] = useState("");
 
     const fetchCompanies = useCallback(
-        (selectedBranches, selectedActivities, name) => {
+        (selectedBranches, selectedActivities, name, selectedListing) => {
         setIsLoading(true);
         let headers = {
           "Content-Type": "application/json"
         }  
-        axios.get("/api/v1/companies", { headers: headers, params: {order: "name", branches: selectedBranches.join(","), activities: selectedActivities.join(","), name} })
+        axios.get("/api/v1/companies", { headers: headers, params: {
+            order: "name", 
+            branches: selectedBranches.join(","), 
+            activities: selectedActivities.join(","), 
+            name,
+            listing: selectedListing
+        } })
         .then(response => { 
             setData(response.data.data);
             setError(null); 
@@ -37,8 +43,8 @@ export const Home = () =>  {
     },[]);
 
     useEffect(() => {
-      fetchCompanies(selectedBranches, selectedActivities, name);
-    }, [selectedBranches, selectedActivities, name, fetchCompanies])
+      fetchCompanies(selectedBranches, selectedActivities, name, selectedListing);
+    }, [selectedBranches, selectedActivities, name, fetchCompanies, selectedListing])
 
     return (
       <>
@@ -49,6 +55,8 @@ export const Home = () =>  {
           setSelectedActivities={setSelectedActivities} 
           name={name} 
           setName={setName} 
+          selectedListing={selectedListing}
+          setSelectedListing={setSelectedListing}
         />
         {isLoading
         ?
@@ -78,13 +86,16 @@ export const Home = () =>  {
     );
 }
 
-const FilterForm = ({selectedBranches, setSelectedBranches, selectedActivities, setSelectedActivities, name, setName}) => {
+const FilterForm = ({selectedBranches, setSelectedBranches, selectedActivities, setSelectedActivities, selectedListing, setSelectedListing, name, setName}) => {
   const [branches, setBranches] = useState(null);
   const [errorActivities, setErrorActivities] = useState(false)
   const [isLoadingActivities, setIsLoadingActivities] = useState(false)
   const [activities, setActivities] = useState(null);
   const [isLoadingBranches, setIsLoadingBranches] = useState(false);
   const [errorBranches, setErrorBranches] = useState(false);
+  const [listings, setListings] = useState(null);
+  const [isLoadingListings, setIsLoadingListings] = useState(false);
+  const [errorListings, setErrorListings] = useState(false);
 
   const toggleSelectedBranches = (id) => {
     let newSelectedBranches = [...selectedBranches];
@@ -116,6 +127,16 @@ const FilterForm = ({selectedBranches, setSelectedBranches, selectedActivities, 
         newSelectedActivities.push(id);
     }
     setSelectedActivities(newSelectedActivities);
+  }
+
+  const toggleSelectedListing = (id) => {
+    if (id == selectedListing) {
+        setSelectedListing(null);
+    }
+    else 
+    {
+        setSelectedListing(id);
+    }   
   }
 
     useEffect(() => {
@@ -166,12 +187,39 @@ const FilterForm = ({selectedBranches, setSelectedBranches, selectedActivities, 
                     setIsLoadingActivities(false);
                 })
         };
+
+        const fetchListings = () => {
+            setIsLoadingListings(true);
+            setErrorListings(false);
+            axios.get("/api/v1/listings?visible=true", {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => {
+                    setListings(response.data.data);
+                })
+                .catch(error => {
+                    if (error.response) {
+                        setErrorListings({ status: error.response.status, text: error.response.statusText });
+                    }
+                    else {
+                        setErrorListings({ status: 0, text: "Neznámá chyba" });
+                    }
+                    setListings([]);
+                })
+                .then(() => {
+                    setIsLoadingListings(false);
+                })
+        };
+
     fetchBranches();
     fetchActivities();
+    fetchListings();
   },[])
 
 
-  if (branches && activities) {
+  if (branches && activities && listings) {
     return (
       <Form inline>
           <Input onChange={e => {setName(e.target.value)}} value={name} placeholder="Název nebo jeho část" />
@@ -206,8 +254,22 @@ const FilterForm = ({selectedBranches, setSelectedBranches, selectedActivities, 
                 size="sm">{item.name}</Button>
             );
           }
-              
           )}
+          <ButtonGroup className="m-1">
+            {listings.map((item, index) => {
+                if (item.visible)
+                return (
+                    <Button 
+                    color={item.listingId == selectedListing ? "primary" : "secondary"}
+                    key={index} 
+                    onClick={e => {toggleSelectedListing(item.listingId)}} 
+                    size="sm"
+                    outline
+                    >{item.name}</Button>
+                );
+            }
+            )}
+            </ButtonGroup>
       </Form>
     );
   }

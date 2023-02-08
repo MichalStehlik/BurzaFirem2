@@ -5,7 +5,7 @@ import axios from "axios";
 
 const Branches = ({data}) => {
     const [{accessToken}] = useAuthContext();
-    const [responseBranches, setResponseBranches] = useState(null);
+    const [responseBranches, setResponseBranches] = useState([]);
     const [isLoadingBranches, setIsLoadingBranches] = useState(false);
     const [errorBranches, setErrorBranches] = useState(false);
     const [responseAssignedBranches, setResponseAssignedBranches] = useState(null);
@@ -86,7 +86,8 @@ const Branches = ({data}) => {
     },[fetchBranches])
     useEffect(()=>{
         fetchAssignedBranches();
-    },[fetchAssignedBranches])
+    },[fetchAssignedBranches]);
+
     return (
         <div>
             {
@@ -106,10 +107,10 @@ const Branches = ({data}) => {
                                     responseAssignedBranches.filter(e => e.branchId === item.branchId).length > 0
                                         ?
                                         <Button key={ index} onClick={e => {removeBranch(item.branchId)}} className="m-1">{item.name}</Button>
-                        :
+                                        :
                                         <Button key={index} onClick={e => {addBranch(item.branchId)}} className="m-1" outline>{item.name}</Button>
-                    :
-                    null                 
+                                    :
+                                    null                 
                     ))
                     :
                 <p>Nahrávání</p>

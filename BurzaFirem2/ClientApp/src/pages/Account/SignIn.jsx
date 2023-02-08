@@ -1,10 +1,11 @@
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import axios from "axios"
+import { Card, CardBody, CardHeader, Button, Input, Form, FormGroup, Label } from 'reactstrap';
 import { useAuthContext, SET_ACCESS_TOKEN } from "../../providers/AuthProvider"
 import { useNavigate } from "react-router-dom"
 
 export const SignIn = () => {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const { control, register, handleSubmit, watch, formState: { errors } } = useForm();
     const [, dispatch] = useAuthContext();
     const navigate = useNavigate();
     const onSubmit = data => {
@@ -15,7 +16,6 @@ export const SignIn = () => {
         }
         )
         .then(response => {
-            console.log(response.data);
             dispatch({type: SET_ACCESS_TOKEN, payload: response.data.value});
             navigate("/");
         })
@@ -24,22 +24,26 @@ export const SignIn = () => {
         })
     };
     return (
-        <>
-        <h1>Přihlášení</h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
-                <label>Přihlašovací jméno</label>
-                <input defaultValue="" {...register("username")} />
-            </div>
-            <div>
-                <label>Heslo</label>
-                <input type="password" {...register("password")} />
-            </div>
-            <div>
-                <button type="submit">Login</button>
-            </div>
-        </form>
-        </>
+        <Card style={{maxWidth: 600, margin: "auto"}}>
+            <CardHeader>
+            <h1>Přihlášení</h1>
+            </CardHeader>
+            <CardBody>
+            <Form onSubmit={handleSubmit(onSubmit)}>
+            <FormGroup>
+            <Label for="username">Přihlašovací jméno</Label>
+            <Controller name="username" control={control} render={({ field }) => <Input type="email" placeholder="jmeno@firma.cz" {...field} />} />    
+            </FormGroup>
+            <FormGroup>
+            <Label for="password">Heslo</Label>
+            <Controller name="password" control={control} render={({ field }) => <Input type="password" {...field} />} />    
+            </FormGroup>
+            <FormGroup>
+                <Button type="submit" color="primary">Přihlásit</Button>
+            </FormGroup>
+            </Form>
+            </CardBody>
+        </Card>
     );
 }
 

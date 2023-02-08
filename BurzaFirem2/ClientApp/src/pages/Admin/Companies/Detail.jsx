@@ -9,6 +9,7 @@ import Display from "./Display"
 import Edit from "./Edit"
 import Branches from "./Branches"
 import Activities from "./Activities"
+import Listings from "./Listings"
 import Contacts from "./Contacts"
 
 const Detail = props => {
@@ -86,13 +87,15 @@ const Detail = props => {
                     {" "}
                     <Button color="danger" onClick={e => {deleteData(); navigate("/admin/companies"); }}>Smazání</Button>
                 </div>
-                <h1>{response.name}</h1>
+                <h1 className="mt-2">{response.name}</h1>
                 {editing ? <Edit data={response} switchMode={setEditing} fetchdata={fetchData} /> : <Display data={response} />}
-                <h2>Obory</h2>
+                <h2 className="mt-2">Obory</h2>
                 <Branches data={response} />  
-                <h2>Aktivity</h2>
+                <h2 className="mt-2">Aktivity</h2>
                 <Activities data={response} />  
-                <h2>Kontakty</h2>
+                <h2 className="mt-2">Seznamy</h2>
+                <Listings data={response} />  
+                <h2 className="mt-2">Kontakty</h2>
                 <Contacts data={response} />  
             </>
         )

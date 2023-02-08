@@ -361,14 +361,14 @@ namespace BurzaFirem2.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("11111111-1111-1111-1111-111111110000"), "838f321a-a381-4007-b633-62de745b0e57", "Administrátor", "ADMINISTRÁTOR" },
-                    { new Guid("22222222-2222-2222-2222-222222220000"), "fc47d2d5-674e-40de-aa46-20a62a22cc8c", "Editor", "EDITOR" }
+                    { new Guid("11111111-1111-1111-1111-111111110000"), "fd04e3fa-9048-42d1-be0e-0d9681815f9c", "Administrátor", "ADMINISTRÁTOR" },
+                    { new Guid("22222222-2222-2222-2222-222222220000"), "ec11a3a5-be27-4be1-9878-cdbc6c4fac48", "Editor", "EDITOR" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Created", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "Updated", "UserName" },
-                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, "e9539876-2002-45cb-9004-5af871a3cf1e", new DateTime(2023, 2, 7, 18, 50, 22, 629, DateTimeKind.Local).AddTicks(9600), "burza@pslib.cz", true, false, null, "BURZA@PSLIB.CZ", "BURZA@PSLIB.CZ", "AQAAAAEAACcQAAAAEBs+Zs9IqFb8u6WxlpMb+de+qQBSrrktMYDKqg89I9HzXVcSUqDgUl+b/kXfVyzVxw==", null, false, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 2, 7, 18, 50, 22, 629, DateTimeKind.Local).AddTicks(9624), "burza@pslib.cz" });
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, "731d970e-bca0-4cd7-aad0-3379cc1ed02c", new DateTime(2023, 2, 8, 23, 57, 37, 547, DateTimeKind.Local).AddTicks(8286), "jobs@pslib.cz", true, false, null, "JOBS@PSLIB.CZ", "JOBS@PSLIB.CZ", "AQAAAAEAACcQAAAAEJzn3XTX/EP8190674HGPT+/AMIbJkdX5FyriZ7yBKTwj32mDMBJMnrxuzSH/lFu4A==", null, false, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 2, 8, 23, 57, 37, 547, DateTimeKind.Local).AddTicks(8322), "jobs@pslib.cz" });
 
             migrationBuilder.InsertData(
                 table: "Branches",
@@ -386,8 +386,8 @@ namespace BurzaFirem2.Migrations
                 columns: new[] { "ListingId", "Created", "Name", "Visible" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 2, 7, 18, 50, 22, 630, DateTimeKind.Local).AddTicks(9060), "2022", false },
-                    { 2, new DateTime(2023, 2, 7, 18, 50, 22, 630, DateTimeKind.Local).AddTicks(9066), "2023", false }
+                    { 1, new DateTime(2023, 2, 8, 23, 57, 37, 548, DateTimeKind.Local).AddTicks(7549), "2022", true },
+                    { 2, new DateTime(2023, 2, 8, 23, 57, 37, 548, DateTimeKind.Local).AddTicks(7555), "2023", true }
                 });
 
             migrationBuilder.InsertData(
@@ -407,7 +407,7 @@ namespace BurzaFirem2.Migrations
             migrationBuilder.InsertData(
                 table: "Companies",
                 columns: new[] { "CompanyId", "AddressStreet", "CompanyBranches", "CompanyUrl", "Created", "Description", "LogoId", "Municipality", "Name", "Offer", "PresentationUrl", "Updated", "UserId", "Wanted" },
-                values: new object[] { 1, "U Jezu 525/4", "", "https://www.hardwario.com/", new DateTime(2023, 2, 7, 18, 50, 22, 630, DateTimeKind.Local).AddTicks(9084), "", null, "Liberec 460 01", "HARDWARIO s.r.o.", "<p>Naším hlavním benefitem je to, že se vám u nás rozvinou vaše znalosti elektroniky a vývoje software a firmware, a to prací na reálných projektech.</p>", "", new DateTime(2023, 2, 7, 18, 50, 22, 630, DateTimeKind.Local).AddTicks(9085), new Guid("11111111-1111-1111-1111-111111111111"), "<p>Kluky i holky, kteří se chtějí podílet vývoji IoT řešení, která se uplatňují na celém světě. U nás nebudete uklízet a třídit, ale budete pracovat na skutečném vývoji a výrobě elektroniky.</p>" });
+                values: new object[] { 1, "U Jezu 525/4", "", "https://www.hardwario.com/", new DateTime(2023, 2, 8, 23, 57, 37, 548, DateTimeKind.Local).AddTicks(7572), "", null, "Liberec 460 01", "HARDWARIO s.r.o.", "<p>Naším hlavním benefitem je to, že se vám u nás rozvinou vaše znalosti elektroniky a vývoje software a firmware, a to prací na reálných projektech.</p>", "", new DateTime(2023, 2, 8, 23, 57, 37, 548, DateTimeKind.Local).AddTicks(7573), new Guid("11111111-1111-1111-1111-111111111111"), "<p>Kluky i holky, kteří se chtějí podílet vývoji IoT řešení, která se uplatňují na celém světě. U nás nebudete uklízet a třídit, ale budete pracovat na skutečném vývoji a výrobě elektroniky.</p>" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ActivityCompany_CompaniesCompanyId",
