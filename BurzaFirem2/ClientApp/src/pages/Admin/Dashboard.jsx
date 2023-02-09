@@ -5,9 +5,10 @@ import {Link} from "react-router-dom"
 export const Dashboard = () => {
     const [{ profile, accessToken }] = useAuthContext();
     return (
-        <>
-            <Link to="companies">Firmy</Link>
-        </>
+        <ul>
+            <li><Link to="companies">Firmy</Link></li>
+            <li><Link to="users">Uživatelé</Link></li>
+        </ul>
         
     );
 }

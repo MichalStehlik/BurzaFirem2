@@ -15,7 +15,7 @@ const Display = ({data}) => {
         <h2>Prezentace</h2>
         <p>{"WEB: " + data.companyUrl}</p>
         <p>{"Jiné: " + data.presentationUrl}</p>
-        <h2>Data</h2>
+        <h2>Datumy</h2>
         <p>Vytvoření: <DateTime date={data.created}/></p>
         <p>Aktualizace: <DateTime date={data.updated}/></p>
         </>

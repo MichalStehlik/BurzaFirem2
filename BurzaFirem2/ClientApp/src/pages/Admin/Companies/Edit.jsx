@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form"
 import { useAuthContext } from "../../../providers/AuthProvider"
 import {CKEditor} from '@ckeditor/ckeditor5-react'
 import Editor from '@ckeditor/ckeditor5-build-classic'
-import axios from "axios";
+import axios from "axios"
 
 const Edit = ({data, switchMode}) => {
     const { register, handleSubmit, control, setValue, getValues, formState: { errors } } = useForm({

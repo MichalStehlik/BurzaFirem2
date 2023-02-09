@@ -17,6 +17,9 @@ export const AdminLayout = () => {
               <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/admin/companies">Firmy</NavLink>
               </NavItem>
+              <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/admin/users">Uživatelé</NavLink>
+              </NavItem>
             </ul>
             </Collapse>
         </Navbar>

@@ -34,6 +34,7 @@ namespace BurzaFirem2.Controllers.v1
         public async Task<ActionResult<ListVM<UserVM>>> GetUsers(
             string? search = null,
             string? email = null,
+            string? username = null,
             int page = 0,
             int pagesize = 0,
             string? order = null
@@ -45,11 +46,15 @@ namespace BurzaFirem2.Controllers.v1
                 users = users.Where(i => (i.UserName.Contains(search)));
             if (!String.IsNullOrEmpty(email))
                 users = users.Where(i => (i.Email.Contains(email)));
+            if (!String.IsNullOrEmpty(username))
+                users = users.Where(i => (i.UserName.Contains(username)));
             int filtered = users.CountAsync().Result;
             users = order switch
             {
                 "email" => users.OrderBy(c => c.Email),
                 "email_desc" => users.OrderByDescending(c => c.Email),
+                "username" => users.OrderBy(c => c.Email),
+                "username_desc" => users.OrderByDescending(c => c.Email),
                 _ => users
             };
             if (pagesize != 0)
@@ -63,7 +68,14 @@ namespace BurzaFirem2.Controllers.v1
                 Count = count, 
                 Page = page, 
                 Pagesize = pagesize, 
-                Data = users.Select(u => new UserVM { Id = u.Id, UserName = u.UserName, Email = u.Email, EmailConfirmed = u.EmailConfirmed }).ToList() 
+                Data = users.Select(u => new UserVM { 
+                    Id = u.Id, 
+                    UserName = u.UserName, 
+                    Email = u.Email, 
+                    EmailConfirmed = u.EmailConfirmed, 
+                    Updated = u.Updated,
+                    Created = u.Created
+                }).ToList() 
             };
         }
 
