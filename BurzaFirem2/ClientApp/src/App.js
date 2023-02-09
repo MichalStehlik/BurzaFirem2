@@ -15,6 +15,7 @@ import CompaniesCreate from "./pages/Admin/Companies/Create"
 import { UsersLayout } from "./pages/Admin/Users"
 import UsersList from "./pages/Admin/Users/List"
 import UsersDetail from "./pages/Admin/Users/Detail"
+import UsersCreate from "./pages/Admin/Users/Create"
 import NotFound from "./pages/Special/NotFound"
 import Unauthorized from "./pages/Special/Unauthorized"
 import './custom.css'
@@ -35,6 +36,7 @@ export default class App extends Component {
             </Route> 
             <Route path='/admin/users' element={<UsersLayout />}>
               <Route index element={<UsersList />} />
+              <Route path="/admin/users/create" element={<UsersCreate />} />
               <Route path="/admin/users/:id" element={<UsersDetail />} />
             </Route> 
           </Route>

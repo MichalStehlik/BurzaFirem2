@@ -1,14 +1,13 @@
 ﻿using BurzaFirem2.Constants;
 using BurzaFirem2.Data;
 using BurzaFirem2.InputModels;
+using BurzaFirem2.Migrations;
 using BurzaFirem2.Models;
 using BurzaFirem2.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
-using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -96,18 +95,28 @@ namespace BurzaFirem2.Controllers.v1
         // POST api/<UsersController>
         [HttpPost]
         [Authorize(Policy = Security.ADMIN_POLICY)]
-        public async Task<IActionResult>CreateUser([FromBody] RegisterIM values)
+        public async Task<IActionResult>CreateUser([FromBody] CreateUserIM values)
         {
             ApplicationUser user = new ApplicationUser
             {
                 UserName = values.Email,
                 Email = values.Email,
+                EmailConfirmed = true,
                 Created = DateTime.Now,
                 Updated = DateTime.Now,
             };
             var result = await _um.CreateAsync(user, values.Password);
             if (result.Succeeded)
             {
+                var currentUser = await _um.FindByNameAsync(user.UserName);
+                if (values.Admin == true)
+                {
+                    var roleResult = await _um.AddToRoleAsync(currentUser, "Administrátor");
+                }
+                if (values.Editor == true)
+                {
+                    var roleResult = await _um.AddToRoleAsync(currentUser, "Editor");
+                }
                 return CreatedAtAction("GetUser", new { id = user.Id }, user);
             }
             return BadRequest();
@@ -115,12 +124,29 @@ namespace BurzaFirem2.Controllers.v1
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [Authorize(Policy = Security.ADMIN_POLICY)]
+        public async Task<IActionResult> PutAsync(Guid id, [FromBody] EditUserIM input)
         {
+            if (id != input.Id)
+            {
+                return BadRequest();
+            }
+            var user = await _um.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.Email = input.Email;
+            user.UserName = input.Username;
+            await _um.UpdateAsync(user);
+
+            return Ok();
         }
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = Security.ADMIN_POLICY)]
         public void Delete(int id)
         {
         }

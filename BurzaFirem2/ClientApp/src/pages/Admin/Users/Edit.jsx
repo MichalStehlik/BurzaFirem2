@@ -6,7 +6,7 @@ import axios from "axios"
 
 const Edit = ({data, switchMode}) => {
     const { register, handleSubmit, control, setValue, getValues, formState: { errors } } = useForm({
-        defaultValues: {
+        defaultValues: {  
           userName: data.userName,
           email: data.email
     }})
@@ -18,8 +18,8 @@ const Edit = ({data, switchMode}) => {
         setIsLoading(true);
         setOk(false);
         setFailed(false);
-        axios.put("/api/v1/users/" + data.Id, {
-            id: data.Id,
+        axios.put("/api/v1/users/" + data.id, {
+            id: data.id,
             userName: values.userName.trim(),
             email: values.email
         }, {

@@ -11,10 +11,6 @@ export const Profile = () => {
             <Button onClick={() => {
                 dispatch({type: CLEAR_ACCESS_TOKEN}); navigate("/");}}>Odhlásit</Button>
         </div>
-            
-            <p>Profil</p>
-            <pre>{accessToken}</pre>
-            <pre>{JSON.stringify(profile," ",4)}</pre>
         </>
         
     );

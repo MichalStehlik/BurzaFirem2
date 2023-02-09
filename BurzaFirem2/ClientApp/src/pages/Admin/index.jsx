@@ -2,10 +2,13 @@ import {useState} from "react"
 import { Outlet, Link } from "react-router-dom"
 import { Collapse, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, Container } from 'reactstrap'
 import { useAppContext } from "../../providers/AppProvider"
+import { useRequireAuth } from "../../hooks/useRequireAuth"
 
 export const AdminLayout = () => {
     const [{config}] = useAppContext();
     const [navbarOpen, setNavbarOpen] = useState(false);
+    useRequireAuth();
+    
     return (
       <div>
         <header>
