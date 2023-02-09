@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BurzaFirem2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230208225737_Init")]
+    [Migration("20230209084528_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -182,18 +182,18 @@ namespace BurzaFirem2.Migrations
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "731d970e-bca0-4cd7-aad0-3379cc1ed02c",
-                            Created = new DateTime(2023, 2, 8, 23, 57, 37, 547, DateTimeKind.Local).AddTicks(8286),
+                            ConcurrencyStamp = "3e20bada-4052-450d-b8df-525decb0b846",
+                            Created = new DateTime(2023, 2, 9, 9, 45, 27, 455, DateTimeKind.Local).AddTicks(7198),
                             Email = "jobs@pslib.cz",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "JOBS@PSLIB.CZ",
                             NormalizedUserName = "JOBS@PSLIB.CZ",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJzn3XTX/EP8190674HGPT+/AMIbJkdX5FyriZ7yBKTwj32mDMBJMnrxuzSH/lFu4A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMe6W2+2AazsiZh/Pyd85UtNem0UqM7AYXAKeSKEwOl+frclVmUwX+vRZLUTHaHMdQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI",
                             TwoFactorEnabled = false,
-                            Updated = new DateTime(2023, 2, 8, 23, 57, 37, 547, DateTimeKind.Local).AddTicks(8322),
+                            Updated = new DateTime(2023, 2, 9, 9, 45, 27, 455, DateTimeKind.Local).AddTicks(7242),
                             UserName = "jobs@pslib.cz"
                         });
                 });
@@ -327,13 +327,13 @@ namespace BurzaFirem2.Migrations
                             AddressStreet = "U Jezu 525/4",
                             CompanyBranches = "",
                             CompanyUrl = "https://www.hardwario.com/",
-                            Created = new DateTime(2023, 2, 8, 23, 57, 37, 548, DateTimeKind.Local).AddTicks(7572),
+                            Created = new DateTime(2023, 2, 9, 9, 45, 27, 458, DateTimeKind.Local).AddTicks(7013),
                             Description = "",
                             Municipality = "Liberec 460 01",
                             Name = "HARDWARIO s.r.o.",
                             Offer = "<p>Naším hlavním benefitem je to, že se vám u nás rozvinou vaše znalosti elektroniky a vývoje software a firmware, a to prací na reálných projektech.</p>",
                             PresentationUrl = "",
-                            Updated = new DateTime(2023, 2, 8, 23, 57, 37, 548, DateTimeKind.Local).AddTicks(7573),
+                            Updated = new DateTime(2023, 2, 9, 9, 45, 27, 458, DateTimeKind.Local).AddTicks(7018),
                             UserId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Wanted = "<p>Kluky i holky, kteří se chtějí podílet vývoji IoT řešení, která se uplatňují na celém světě. U nás nebudete uklízet a třídit, ale budete pracovat na skutečném vývoji a výrobě elektroniky.</p>"
                         });
@@ -395,14 +395,14 @@ namespace BurzaFirem2.Migrations
                         new
                         {
                             ListingId = 1,
-                            Created = new DateTime(2023, 2, 8, 23, 57, 37, 548, DateTimeKind.Local).AddTicks(7549),
+                            Created = new DateTime(2023, 2, 9, 9, 45, 27, 458, DateTimeKind.Local).AddTicks(6936),
                             Name = "2022",
                             Visible = true
                         },
                         new
                         {
                             ListingId = 2,
-                            Created = new DateTime(2023, 2, 8, 23, 57, 37, 548, DateTimeKind.Local).AddTicks(7555),
+                            Created = new DateTime(2023, 2, 9, 9, 45, 27, 458, DateTimeKind.Local).AddTicks(6955),
                             Name = "2023",
                             Visible = true
                         });
@@ -444,6 +444,28 @@ namespace BurzaFirem2.Migrations
                     b.HasIndex("UploaderId");
 
                     b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("BurzaFirem2.Models.Thumbnail", b =>
+                {
+                    b.Property<Guid>("ImageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("Blob")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid>("FileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ImageId", "Type");
+
+                    b.HasIndex("FileId");
+
+                    b.ToTable("Thumbnails");
                 });
 
             modelBuilder.Entity("CompanyListing", b =>
@@ -492,14 +514,14 @@ namespace BurzaFirem2.Migrations
                         new
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111110000"),
-                            ConcurrencyStamp = "fd04e3fa-9048-42d1-be0e-0d9681815f9c",
+                            ConcurrencyStamp = "4a83271a-c404-45f1-8323-a1a3e1127011",
                             Name = "Administrátor",
                             NormalizedName = "ADMINISTRÁTOR"
                         },
                         new
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222220000"),
-                            ConcurrencyStamp = "ec11a3a5-be27-4be1-9878-cdbc6c4fac48",
+                            ConcurrencyStamp = "008764f3-26eb-43e4-b401-de71757388b5",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });
@@ -707,6 +729,17 @@ namespace BurzaFirem2.Migrations
                     b.Navigation("Uploader");
                 });
 
+            modelBuilder.Entity("BurzaFirem2.Models.Thumbnail", b =>
+                {
+                    b.HasOne("BurzaFirem2.Models.StoredImage", "Image")
+                        .WithMany("Thumbnails")
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+                });
+
             modelBuilder.Entity("CompanyListing", b =>
                 {
                     b.HasOne("BurzaFirem2.Models.Company", null)
@@ -783,6 +816,8 @@ namespace BurzaFirem2.Migrations
             modelBuilder.Entity("BurzaFirem2.Models.StoredImage", b =>
                 {
                     b.Navigation("CompanyLogo");
+
+                    b.Navigation("Thumbnails");
                 });
 #pragma warning restore 612, 618
         }

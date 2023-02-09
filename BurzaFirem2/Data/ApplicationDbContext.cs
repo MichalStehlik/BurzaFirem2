@@ -16,6 +16,7 @@ namespace BurzaFirem2.Data
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Models.Activity> Activities { get; set; }
         public DbSet<StoredImage> Images { get; set; }
+        public DbSet<Thumbnail> Thumbnails { get; set; }
         public DbSet<Listing> Listings { get; set; }
 
         public ApplicationDbContext(DbContextOptions options, ILogger<ApplicationDbContext> logger) : base(options)
@@ -125,6 +126,10 @@ namespace BurzaFirem2.Data
                         Created = DateTime.Now,
                         Updated = DateTime.Now
                     });
+                });
+                modelBuilder.Entity<Thumbnail>(entity =>
+                {
+                    entity.HasKey(t => new { t.ImageId, t.Type });
                 });
             });
         }

@@ -344,6 +344,26 @@ namespace BurzaFirem2.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Thumbnails",
+                columns: table => new
+                {
+                    ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    FileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Blob = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Thumbnails", x => new { x.ImageId, x.Type });
+                    table.ForeignKey(
+                        name: "FK_Thumbnails_Images_FileId",
+                        column: x => x.FileId,
+                        principalTable: "Images",
+                        principalColumn: "ImageId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Activities",
                 columns: new[] { "ActivityId", "Name", "Visible" },
@@ -361,14 +381,14 @@ namespace BurzaFirem2.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("11111111-1111-1111-1111-111111110000"), "fd04e3fa-9048-42d1-be0e-0d9681815f9c", "Administrátor", "ADMINISTRÁTOR" },
-                    { new Guid("22222222-2222-2222-2222-222222220000"), "ec11a3a5-be27-4be1-9878-cdbc6c4fac48", "Editor", "EDITOR" }
+                    { new Guid("11111111-1111-1111-1111-111111110000"), "4a83271a-c404-45f1-8323-a1a3e1127011", "Administrátor", "ADMINISTRÁTOR" },
+                    { new Guid("22222222-2222-2222-2222-222222220000"), "008764f3-26eb-43e4-b401-de71757388b5", "Editor", "EDITOR" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Created", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "Updated", "UserName" },
-                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, "731d970e-bca0-4cd7-aad0-3379cc1ed02c", new DateTime(2023, 2, 8, 23, 57, 37, 547, DateTimeKind.Local).AddTicks(8286), "jobs@pslib.cz", true, false, null, "JOBS@PSLIB.CZ", "JOBS@PSLIB.CZ", "AQAAAAEAACcQAAAAEJzn3XTX/EP8190674HGPT+/AMIbJkdX5FyriZ7yBKTwj32mDMBJMnrxuzSH/lFu4A==", null, false, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 2, 8, 23, 57, 37, 547, DateTimeKind.Local).AddTicks(8322), "jobs@pslib.cz" });
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, "3e20bada-4052-450d-b8df-525decb0b846", new DateTime(2023, 2, 9, 9, 45, 27, 455, DateTimeKind.Local).AddTicks(7198), "jobs@pslib.cz", true, false, null, "JOBS@PSLIB.CZ", "JOBS@PSLIB.CZ", "AQAAAAEAACcQAAAAEMe6W2+2AazsiZh/Pyd85UtNem0UqM7AYXAKeSKEwOl+frclVmUwX+vRZLUTHaHMdQ==", null, false, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 2, 9, 9, 45, 27, 455, DateTimeKind.Local).AddTicks(7242), "jobs@pslib.cz" });
 
             migrationBuilder.InsertData(
                 table: "Branches",
@@ -386,8 +406,8 @@ namespace BurzaFirem2.Migrations
                 columns: new[] { "ListingId", "Created", "Name", "Visible" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 2, 8, 23, 57, 37, 548, DateTimeKind.Local).AddTicks(7549), "2022", true },
-                    { 2, new DateTime(2023, 2, 8, 23, 57, 37, 548, DateTimeKind.Local).AddTicks(7555), "2023", true }
+                    { 1, new DateTime(2023, 2, 9, 9, 45, 27, 458, DateTimeKind.Local).AddTicks(6936), "2022", true },
+                    { 2, new DateTime(2023, 2, 9, 9, 45, 27, 458, DateTimeKind.Local).AddTicks(6955), "2023", true }
                 });
 
             migrationBuilder.InsertData(
@@ -407,7 +427,7 @@ namespace BurzaFirem2.Migrations
             migrationBuilder.InsertData(
                 table: "Companies",
                 columns: new[] { "CompanyId", "AddressStreet", "CompanyBranches", "CompanyUrl", "Created", "Description", "LogoId", "Municipality", "Name", "Offer", "PresentationUrl", "Updated", "UserId", "Wanted" },
-                values: new object[] { 1, "U Jezu 525/4", "", "https://www.hardwario.com/", new DateTime(2023, 2, 8, 23, 57, 37, 548, DateTimeKind.Local).AddTicks(7572), "", null, "Liberec 460 01", "HARDWARIO s.r.o.", "<p>Naším hlavním benefitem je to, že se vám u nás rozvinou vaše znalosti elektroniky a vývoje software a firmware, a to prací na reálných projektech.</p>", "", new DateTime(2023, 2, 8, 23, 57, 37, 548, DateTimeKind.Local).AddTicks(7573), new Guid("11111111-1111-1111-1111-111111111111"), "<p>Kluky i holky, kteří se chtějí podílet vývoji IoT řešení, která se uplatňují na celém světě. U nás nebudete uklízet a třídit, ale budete pracovat na skutečném vývoji a výrobě elektroniky.</p>" });
+                values: new object[] { 1, "U Jezu 525/4", "", "https://www.hardwario.com/", new DateTime(2023, 2, 9, 9, 45, 27, 458, DateTimeKind.Local).AddTicks(7013), "", null, "Liberec 460 01", "HARDWARIO s.r.o.", "<p>Naším hlavním benefitem je to, že se vám u nás rozvinou vaše znalosti elektroniky a vývoje software a firmware, a to prací na reálných projektech.</p>", "", new DateTime(2023, 2, 9, 9, 45, 27, 458, DateTimeKind.Local).AddTicks(7018), new Guid("11111111-1111-1111-1111-111111111111"), "<p>Kluky i holky, kteří se chtějí podílet vývoji IoT řešení, která se uplatňují na celém světě. U nás nebudete uklízet a třídit, ale budete pracovat na skutečném vývoji a výrobě elektroniky.</p>" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ActivityCompany_CompaniesCompanyId",
@@ -490,6 +510,11 @@ namespace BurzaFirem2.Migrations
                 table: "Images",
                 column: "UploaderId");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_Thumbnails_FileId",
+                table: "Thumbnails",
+                column: "FileId");
+
             migrationBuilder.AddForeignKey(
                 name: "FK_ActivityCompany_Companies_CompaniesCompanyId",
                 table: "ActivityCompany",
@@ -546,6 +571,9 @@ namespace BurzaFirem2.Migrations
 
             migrationBuilder.DropTable(
                 name: "Contacts");
+
+            migrationBuilder.DropTable(
+                name: "Thumbnails");
 
             migrationBuilder.DropTable(
                 name: "Activities");

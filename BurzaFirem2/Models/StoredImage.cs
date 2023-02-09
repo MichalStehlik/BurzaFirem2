@@ -21,5 +21,6 @@ namespace BurzaFirem2.Models
         public int? CompanyId { get; set; }
         public Company? CompanyLogo { get; set; }
         public int? CompanyLogoId { get; set; }
+        public ICollection<Thumbnail> Thumbnails { get; set; }
     }
 }
