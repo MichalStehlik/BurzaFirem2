@@ -2,12 +2,13 @@ import {useState} from "react"
 import { Outlet, Link } from "react-router-dom"
 import { Collapse, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, Container } from 'reactstrap'
 import { useAppContext } from "../../providers/AppProvider"
-import { useRequireAuth } from "../../hooks/useRequireAuth"
+//import { useRequireAuth } from "../../hooks/useRequireAuth"
+import {requireAuth} from "../../hoc/requireAuth"
 
 export const AdminLayout = () => {
     const [{config}] = useAppContext();
     const [navbarOpen, setNavbarOpen] = useState(false);
-    useRequireAuth();
+    //useRequireAuth();
     
     return (
       <div>
@@ -34,4 +35,4 @@ export const AdminLayout = () => {
     );
 }
 
-export default AdminLayout;
+export default requireAuth(AdminLayout);

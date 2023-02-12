@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form"
 import { useAuthContext } from "../../../providers/AuthProvider"
 import axios from "axios"
 
-const Edit = ({data, switchMode}) => {
+const Password = ({data, switchMode}) => {
     const { register, handleSubmit, control, setValue, getValues, formState: { errors } } = useForm({
         defaultValues: {  
           userName: data.userName,
@@ -18,10 +18,9 @@ const Edit = ({data, switchMode}) => {
         setIsLoading(true);
         setOk(false);
         setFailed(false);
-        axios.put("/api/v1/users/" + data.id, {
+        axios.put("/api/v1/users/" + data.id + "/password", {
             id: data.id,
-            userName: values.userName.trim(),
-            email: values.email
+            password: values.password.trim()
         }, {
             headers: {
                 Authorization: "Bearer " + accessToken,
@@ -41,19 +40,13 @@ const Edit = ({data, switchMode}) => {
             setIsLoading(false);
         })
     };
-
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FormGroup>
-                    <Label for="userName">Uživatelské jméno</Label>
-                    <Controller name="userName" control={control} rules={{ required: true }} render={({ field }) => <Input {...field} placeholder="jmeno@firma.cz" />} />
+                    <Label for="password">Nové heslo</Label>
+                    <Controller name="password" control={control} rules={{ required: true }} render={({ field }) => <Input {...field} placeholder="" />} />
                     {errors.userName?.type === 'required' && <span className="text-danger">Jméno je povinný údaj</span>}
-                </FormGroup>
-                <FormGroup>
-                    <Label for="email">Email</Label>
-                    <Controller name="email" control={control} render={({ field }) => <Input {...field} placeholder="jmeno@firma.cz" />} />
-                    {errors.name?.type === 'required' && <span className="text-danger">Email je povinný údaj</span>}
                 </FormGroup>
                 {
                 failed
@@ -79,4 +72,4 @@ const Edit = ({data, switchMode}) => {
     );
 }
 
-export default Edit;
+export default Password;

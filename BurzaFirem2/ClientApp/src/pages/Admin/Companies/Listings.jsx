@@ -87,7 +87,7 @@ const Listings = ({data}) => {
     useEffect(()=>{
         fetchAssignedListings();
     },[fetchAssignedListings])
-    console.log(responseListings);
+
     return (
         <div>
             {

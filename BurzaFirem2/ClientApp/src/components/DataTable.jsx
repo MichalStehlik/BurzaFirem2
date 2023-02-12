@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import {Input, Table} from "reactstrap"
+import {Input, Table, Alert, Spinner, Row, Col, Button, ButtonGroup} from "reactstrap"
 import { useTable, usePagination, useSortBy, useFilters, useGlobalFilter, useRowSelect } from 'react-table'
 
 export const TextColumnFilter = ({ column: { filterValue, preFilteredRows, setFilter }}) => {
@@ -70,7 +70,15 @@ export const DataTable = ({columns, data, fetchData, isLoading, error, totalPage
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {page.map((row, i) => {
+            {error ? (
+              <tr>
+                <td colSpan={1000}><Alert>Došlo k chybě</Alert></td>
+              </tr>
+            ) : (
+              isLoading ? (
+               <tr><td align="center" colSpan={1000}><Spinner /></td></tr>
+            ) : 
+            page.map((row, i) => {
               prepareRow(row)
                 return (
                     <tr key={ i } {...row.getRowProps()}>
@@ -79,8 +87,29 @@ export const DataTable = ({columns, data, fetchData, isLoading, error, totalPage
                   })}
                 </tr>
               )
-            })}
+            }))}
           </tbody>
+          <tfoot>
+            <tr>
+              <td>
+                <Row>
+                  <Col>
+                  <ButtonGroup className="me-2">
+                    <Button variant="secondary" size="sm" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>⇤</Button>{' '}
+                    <Button variant="secondary" size="sm" onClick={() => previousPage()} disabled={!canPreviousPage}>←</Button>{' '}
+                    <Button variant="secondary" size="sm" onClick={() => nextPage()} disabled={!canNextPage} >→</Button>{' '}
+                    <Button variant="secondary" size="sm" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>⭲</Button>{' '}
+                  </ButtonGroup>
+                  </Col>
+                  <Col>
+                  <ButtonGroup>
+                  {[...Array(pageCount).keys()].map((num) => (<Button size="sm" variant="outline-secondary" key={num} onClick={() => { gotoPage(num) }}>{num + 1}</Button>))}
+                  </ButtonGroup>
+                  </Col>
+                </Row>
+              </td>
+            </tr>
+          </tfoot>
         </Table>
     )   
 }

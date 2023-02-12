@@ -56,6 +56,8 @@ const List = props => {
         })();    
       },[accessToken]);
 
+      
+
       const columns = useMemo(() => [
         {Header: "Jméno", accessor: "userName"},      
         {Header: "Email", accessor: "email", disableSortBy: true},

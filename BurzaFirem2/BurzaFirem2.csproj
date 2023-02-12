@@ -46,6 +46,7 @@
     <Folder Include="Interfaces\" />
     <Folder Include="Logs\" />
     <Folder Include="Migrations\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
