@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using BurzaFirem2.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
+using BurzaFirem2.Services;
 
 namespace BurzaFirem2.Controllers.v1
 {
@@ -23,29 +24,31 @@ namespace BurzaFirem2.Controllers.v1
         private readonly UserManager<ApplicationUser> _um;
         private ILogger<ImagesController> _logger;
         private IWebHostEnvironment _environment;
+        private FileStorageManager _fsm;
 
-        public ImagesController(ApplicationDbContext context, UserManager<ApplicationUser> um, ILogger<ImagesController> logger, IWebHostEnvironment environment)
+        public ImagesController(ApplicationDbContext context, UserManager<ApplicationUser> um, ILogger<ImagesController> logger, IWebHostEnvironment environment, FileStorageManager fsm)
         {
             _context = context;
             _um = um;
             _logger = logger;
             _environment = environment;
+            _fsm = fsm;
         }
 
         // GET: api/v1/Images
         [HttpGet]
         public async Task<ListVM<StoredImage>> GetImages(
-            string? name = null,
+            string? originalName = null,
             string? uploaderId = null,
             int page = 0,
             int pagesize = 0,
             string? order = null
             )
         {
-            IQueryable<StoredImage> images = _context.Images;
+            IQueryable<StoredImage> images = _context.Images.Include(i => i.Uploader);
             int total = images.CountAsync().Result;
-            if (!String.IsNullOrEmpty(name))
-                images = images.Where(i => (i.OriginalName.Contains(name)));
+            if (!String.IsNullOrEmpty(originalName))
+                images = images.Where(i => (i.OriginalName.Contains(originalName)));
             if (uploaderId != null)
             {
                 images = images.Where(i => (i.UploaderId == Guid.Parse(uploaderId)));
@@ -53,8 +56,8 @@ namespace BurzaFirem2.Controllers.v1
             int filtered = images.CountAsync().Result;
             images = order switch
             {
-                "name" => images.OrderBy(c => c.OriginalName),
-                "name_desc" => images.OrderByDescending(c => c.OriginalName),
+                "originalName" => images.OrderBy(c => c.OriginalName),
+                "originalName_desc" => images.OrderByDescending(c => c.OriginalName),
                 _ => images.OrderByDescending(c => c.ImageId)
             };
             if (pagesize != 0)
@@ -62,7 +65,7 @@ namespace BurzaFirem2.Controllers.v1
                 images = images.Skip(page * pagesize).Take(pagesize);
             }
             int count = images.CountAsync().Result;
-            return new ListVM<StoredImage> { Total = total, Filtered = filtered, Count = count, Page = page, Pagesize = pagesize, Data = images.ToList() };
+            return new ListVM<StoredImage> { Total = total, Filtered = filtered, Count = count, Page = page, Pagesize = pagesize, Data = await images.ToListAsync() };
         }
 
         // GET: api/v1/Images/5

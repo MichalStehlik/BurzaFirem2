@@ -72,7 +72,7 @@ export const DataTable = ({columns, data, fetchData, isLoading, error, totalPage
           <tbody {...getTableBodyProps()}>
             {error ? (
               <tr>
-                <td colSpan={1000}><Alert>Došlo k chybě</Alert></td>
+                <td colSpan={1000}><Alert color="danger">Došlo k chybě</Alert></td>
               </tr>
             ) : (
               isLoading ? (

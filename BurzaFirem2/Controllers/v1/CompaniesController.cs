@@ -78,7 +78,7 @@ namespace BurzaFirem2.Controllers.v1
                 companies = companies.Skip(page * pagesize).Take(pagesize);
             }
             int count = companies.CountAsync().Result;
-            return new ListVM<Company> { Total = total, Filtered = filtered, Count = count, Page = page, Pagesize = pagesize, Data = companies.ToList() };
+            return new ListVM<Company> { Total = total, Filtered = filtered, Count = count, Page = page, Pagesize = pagesize, Data = await companies.ToListAsync() };
         }
 
         // GET: api/v1/Companies/5

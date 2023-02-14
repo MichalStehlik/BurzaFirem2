@@ -71,14 +71,14 @@ namespace BurzaFirem2.Controllers.v1
                 Count = count, 
                 Page = page, 
                 Pagesize = pagesize, 
-                Data = users.Select(u => new UserVM { 
+                Data = await users.Select(u => new UserVM { 
                     Id = u.Id, 
                     UserName = u.UserName, 
                     Email = u.Email, 
                     EmailConfirmed = u.EmailConfirmed, 
                     Updated = u.Updated,
                     Created = u.Created
-                }).ToList() 
+                }).ToListAsync() 
             };
         }
 

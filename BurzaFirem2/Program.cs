@@ -10,6 +10,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
+using tusdotnet;
+using tusdotnet.Interfaces;
+using tusdotnet.Models;
+using tusdotnet.Stores;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +36,7 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<RazorViewToStringRenderer>();
 builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<FileStorageManager>();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -122,6 +127,29 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapTus("/upload", async httpContext => new()
+{
+    // This method is called on each request so different configurations can be returned per user, domain, path etc.
+    // Return null to disable tusdotnet for the current request.
+
+    // Where to store data?
+
+    Store = new tusdotnet.Stores.TusDiskStore(Path.Combine(app.Environment.ContentRootPath, builder.Configuration.GetValue<string>("Uploads:Path"))),
+    MaxAllowedUploadSizeInBytes = 10000000,
+    Events = new()
+    {
+        // What to do when file is completely uploaded?
+        OnFileCompleteAsync = async eventContext =>
+        {
+            var fsm = httpContext.RequestServices.GetService<FileStorageManager>();
+
+            tusdotnet.Interfaces.ITusFile file = await eventContext.GetFileAsync();
+
+            await fsm.StoreTus(file, eventContext.CancellationToken);
+        }
+    }
+});
 
 app.MapControllerRoute(
     name: "default",
