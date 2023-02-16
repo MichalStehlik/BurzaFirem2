@@ -102,13 +102,13 @@ const Detail = props => {
                 <div className="text-center">
                 {response.companyUrl
                     ?
-                    <Button block tag="a" href={response.companyUrl.startsWith("http") ? response.companyUrl : ("https://" + response.companyUrl) } className="m-1" color="primary">Firemní web</Button>
+                    <Button tag="a" href={response.companyUrl.startsWith("http") ? response.companyUrl : ("https://" + response.companyUrl) } className="m-1" color="primary">Firemní web</Button>
                     :
                     null
                 }
                 {response.presentationUrl
                 ?
-                <Button block tag="a" href={response.presentationUrl.startsWith("http") ? response.presentationUrl : ("https://" + response.presentationUrl) } className="m-1" >Firemní prezentace</Button>
+                <Button tag="a" href={response.presentationUrl.startsWith("http") ? response.presentationUrl : ("https://" + response.presentationUrl) } className="m-1" >Firemní prezentace</Button>
                 :
                 null
                 }

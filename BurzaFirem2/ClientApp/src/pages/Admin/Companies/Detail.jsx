@@ -14,12 +14,13 @@ import Contacts from "./Contacts"
 
 const Detail = props => {
     const { id } = useParams();
-    const [{accessToken}] = useAuthContext();
+    const [{accessToken, profile, userId}] = useAuthContext();
     const [editing, setEditing] = useState(false);
     const [response, setResponse] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
+    const [canEdit, setCanEdit] = useState(true);
     const navigate = useNavigate();
     const fetchData = useCallback(() => {
         setIsLoading(true);
@@ -32,6 +33,7 @@ const Detail = props => {
         })
         .then(response => {
             setResponse(response.data);
+            setCanEdit((userId === response.data.userId) || (profile.admin === "1") );
         })
         .catch(error => {
             if (error.response) {
@@ -49,7 +51,7 @@ const Detail = props => {
     const deleteData = useCallback(() => {
         setIsLoading(true);
         setError(false);
-        axios.delete("/api/v1/companies/" + id,{
+        axios.delete("/api/v1/companies/" + id, {
             headers: {
                 Authorization: "Bearer " + accessToken,
                 "Content-Type": "application/json"
@@ -87,18 +89,29 @@ const Detail = props => {
             <>
                 <div>
                     <Link to="/admin/companies" className="btn btn-secondary">Seznam</Link>
+                    {canEdit
+                    ?
+                    <>
                     {" "}
                     <Button color="primary" onClick={e => {setEditing(!editing)}}>Editace</Button>
                     {" "}
-                    <Button color="danger" onClick={e => {setShowDelete(true); /*deleteData(); navigate("/admin/companies"); */}}>Smazání</Button>
+                    <Button color="danger" onClick={e => {setShowDelete(true); }}>Smazání</Button>
+                    </>
+                    :
+                    null
+                    }                   
                 </div>
+                {!canEdit ? <Alert color="warning" className="m-1">Tato firma vám nepatří a nemůžete ji editovat!</Alert> : null}
                 <h1 className="mt-2">{response.name}</h1>
                 {editing ? <Edit data={response} switchMode={setEditing} fetchdata={fetchData} /> : <Display data={response} />}
                 <h2 className="mt-2">Obory</h2>
+                <p>Obory školy, pro které je práce nebo praxe vhodná nebo určená</p>
                 <Branches data={response} />  
                 <h2 className="mt-2">Aktivity</h2>
+                <p>Mohou studenti absolvovat krátkou praxi ve firmě? Může přijít třída na exkurzi?</p>
                 <Activities data={response} />  
-                <h2 className="mt-2">Seznamy</h2>
+                <h2 className="mt-2">Přítomnost na akcích</h2>
+                <p>Má například firma fyzickou přítomnost ve škole v podobě stánku na Burze firem?</p>
                 <Listings data={response} />  
                 <h2 className="mt-2">Kontakty</h2>
                 <Contacts data={response} />  
