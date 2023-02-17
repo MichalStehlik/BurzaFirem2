@@ -15,7 +15,7 @@ export const FrontLayout = () => {
             <NavbarBrand tag={Link} to="/">{config.applicationName}</NavbarBrand>
             <NavbarToggler onClick={e => setNavbarOpen(prev => !prev)} className="mr-2" />
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={navbarOpen} navbar>
-            {(profile && profile.admin) 
+            {(profile && (profile.admin === "1" || profile.editor === "1")) 
             ? 
             <ul className="navbar-nav flex-grow">
               <NavItem>

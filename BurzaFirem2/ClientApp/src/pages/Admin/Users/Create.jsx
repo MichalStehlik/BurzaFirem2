@@ -3,12 +3,12 @@ import { Button, Form, FormGroup, Label, Input, Alert, Spinner } from 'reactstra
 import { useForm, Controller } from "react-hook-form"
 import { useAuthContext } from "../../../providers/AuthProvider"
 import { useNavigate } from "react-router-dom"
-import Editor from '@ckeditor/ckeditor5-build-classic'
 import axios from "axios";
 
 const Create = props => {
     const { register, handleSubmit, control, setValue, getValues, formState: { errors } } = useForm({
         defaultValues: {
+          userName: "",
           email: "",
           password: "",
           admin: false,
@@ -25,6 +25,7 @@ const Create = props => {
         setFailed(false);
         console.log(data);
         axios.post("/api/v1/users", {
+            userName: data.userName.trim(),
             email: data.email.trim(),
             password: data.password.trim(),
             admin: Boolean(data.admin),
@@ -53,6 +54,11 @@ const Create = props => {
         <>
             <h1>Vytvoření nového uživatele</h1>
             <form onSubmit={handleSubmit(onSubmit)}>
+                <FormGroup>
+                    <Label for="userName">Uživatelské jméno</Label>
+                    <Controller name="userName" control={control} rules={{ required: true }} render={({ field }) => <Input {...field} />} />
+                    {errors.userName?.type === 'required' && <span className="text-danger">Uživatelské jméno je povinný údaj</span>}
+                </FormGroup>
                 <FormGroup>
                     <Label for="email">Email</Label>
                     <Controller name="email" control={control} rules={{ required: true }} render={({ field }) => <Input {...field} placeholder="jmeno@firma.cz" type="email" />} />

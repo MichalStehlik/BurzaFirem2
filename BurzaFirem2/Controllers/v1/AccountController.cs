@@ -96,7 +96,7 @@ namespace BurzaFirem2.Controllers.v1
         {
             ApplicationUser user = new ApplicationUser 
             { 
-                UserName = values.Email, 
+                UserName = values.UserName, 
                 Email = values.Email,
                 Created = DateTime.Now,
                 Updated = DateTime.Now,
