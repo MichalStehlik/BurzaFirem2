@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useRef } from "react";
 import { Link } from 'react-router-dom'
 import { useAuthContext } from "../../../providers/AuthProvider"
-import {Badge, Input} from "reactstrap"
+import {Alert, Input, Progress} from "reactstrap"
 import DataTable from "../../../components/DataTable";
 import DateTime from "../../../components/DateTime"
 import axios from "axios"
@@ -14,30 +14,39 @@ const List = () => {
     const [data, setData] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const fileUploader = useRef(null);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadError, setUploadError] = useState(false);
 
     const handleFilesSelected = e => {
-      var files = e.target.files;
-      for (let file of files) {
-        console.log(file);
-        var upload = new tus.Upload(file, {
-          endpoint: "https://localhost:44416/upload/",
-          retryDelays: [0, 3000, 5000, 10000, 20000],
-          metadata: {
-            filename: file.name,
-            filetype: file.type
-          },
-          onError: function (error) {
-            console.log("Failed because: " + error)
-          },
-          onProgress: function (bytesUploaded, bytesTotal) {
-            var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2)
-            console.log(bytesUploaded, bytesTotal, percentage + "%")
-          },
-          onSuccess: function () {
-            console.log("Download %s from %s", upload.file.name, upload.url)
-          }
-        });
-      }
+      var file = e.target.files[0];
+      setIsUploading(true);
+      var upload = new tus.Upload(file, {
+        endpoint: "https://localhost:44416/upload/",
+        retryDelays: [0, 3000, 5000, 10000, 20000],
+        metadata: {
+          filename: file.name,
+          filetype: file.type
+        },
+        onError: function (error) {
+          setUploadError(error);
+        },
+        onProgress: function (bytesUploaded, bytesTotal) {
+          var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2)
+          setUploadProgress(percentage);
+          console.log(bytesUploaded, bytesTotal, percentage + "%")
+        },
+        onSuccess: function () {
+          console.log("Download %s from %s", upload.file.name, upload.url)
+        }
+      });
+      upload.findPreviousUploads().then(function (previousUploads) {
+        if (previousUploads.length) {
+            upload.resumeFromPreviousUpload(previousUploads[0])
+        }
+        upload.start()
+      });
+      setIsUploading(false);
     };
 
     const fetchData = useCallback(({page, size = 0, sort, filters})=>{
@@ -103,7 +112,19 @@ const List = () => {
                 error={error}
                 totalPages={totalPages}
             />
-            <Input type="file" name="file" id="file" onChange={handleFilesSelected} multiple ref={fileUploader} />
+            <Input type="file" name="file" id="file" onChange={handleFilesSelected} ref={fileUploader} />
+            {isUploading 
+            ?
+              <Progress value={uploadProgress} />
+            :
+              null
+            }
+            {uploadError
+            ?
+              <Alert color="danger">{uploadError}</Alert>
+            :
+              null
+            }
         </>
     );
 }

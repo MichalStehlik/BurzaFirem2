@@ -9,10 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Net;
+using System.Security.Claims;
 using System.Text;
 using tusdotnet;
 using tusdotnet.Interfaces;
 using tusdotnet.Models;
+using tusdotnet.Models.Configuration;
 using tusdotnet.Stores;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -128,22 +131,37 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapTus("/upload", async httpContext => new()
+app.MapTus("/" + builder.Configuration.GetValue<string>("Uploads:Endpoint"), async httpContext => new()
 {
     Store = new tusdotnet.Stores.TusDiskStore(Path.Combine(app.Environment.ContentRootPath, builder.Configuration.GetValue<string>("Uploads:Path"))),
-    MaxAllowedUploadSizeInBytes = 10000000,
+    MaxAllowedUploadSizeInBytes = 100000000,
     Events = new()
     {
+        OnAuthorizeAsync = eventContext =>
+        {
+            if (!eventContext.HttpContext.User.Identity.IsAuthenticated)
+            {
+                eventContext.FailRequest(HttpStatusCode.Unauthorized);
+                return Task.CompletedTask;
+            };
+            if (!(eventContext.HttpContext.User.HasClaim("Admin","1") || eventContext.HttpContext.User.HasClaim("Editor", "1")))
+            {
+                eventContext.FailRequest(HttpStatusCode.Forbidden);
+                return Task.CompletedTask;
+            }
+            return Task.CompletedTask;
+        },
+
         OnFileCompleteAsync = async eventContext =>
         {
             var fsm = httpContext.RequestServices.GetService<FileStorageManager>();
 
-            tusdotnet.Interfaces.ITusFile file = await eventContext.GetFileAsync();
+            ITusFile file = await eventContext.GetFileAsync();
 
             await fsm.StoreTus(file, eventContext.CancellationToken);
         }
     }
-});
+}) ;
 
 app.MapControllerRoute(
     name: "default",

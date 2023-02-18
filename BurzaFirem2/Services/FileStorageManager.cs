@@ -21,8 +21,12 @@ namespace BurzaFirem2.Services
             Dictionary<string, tusdotnet.Models.Metadata> metadata = await file.GetMetadataAsync(cancellationToken);
             string? filename = metadata.FirstOrDefault(m => m.Key == "filename").Value.GetString(System.Text.Encoding.UTF8);
             string? filetype = metadata.FirstOrDefault(m => m.Key == "filetype").Value.GetString(System.Text.Encoding.UTF8);
-            bool isPublic = metadata.FirstOrDefault(m => m.Key == "ispublic").Value.GetString(System.Text.Encoding.UTF8) == "1" ? true : false;
+            bool isPublic = metadata.FirstOrDefault(m => m.Key == "ispublic")!.Value.GetString(System.Text.Encoding.UTF8) == "1" ? true : false;
             _logger.Log(LogLevel.Debug, "Successfuly stored file {0} of {1}", filename, filetype);
+            if (filetype.StartsWith("image"))
+            {
+
+            }
         }
     }
 }
