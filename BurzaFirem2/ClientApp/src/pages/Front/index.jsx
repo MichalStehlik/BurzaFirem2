@@ -10,8 +10,7 @@ export const FrontLayout = () => {
     const [navbarOpen, setNavbarOpen] = useState(false);
     return (
       <div>
-        <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container light>
+        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container color="light" light fixed="top" full={true} tag="header">
             <NavbarBrand tag={Link} to="/">{config.applicationName}</NavbarBrand>
             <NavbarToggler onClick={e => setNavbarOpen(prev => !prev)} className="mr-2" />
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={navbarOpen} navbar>
@@ -36,8 +35,7 @@ export const FrontLayout = () => {
             </ul>
             </Collapse>
         </Navbar>
-        </header>
-        <Container>
+        <Container style={{paddingTop: 76}}>
             <Outlet />
         </Container>
       </div>
