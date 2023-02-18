@@ -56,8 +56,8 @@ namespace BurzaFirem2.Controllers.v1
             {
                 "email" => users.OrderBy(c => c.Email),
                 "email_desc" => users.OrderByDescending(c => c.Email),
-                "username" => users.OrderBy(c => c.Email),
-                "username_desc" => users.OrderByDescending(c => c.Email),
+                "username" => users.OrderBy(c => c.UserName),
+                "username_desc" => users.OrderByDescending(c => c.UserName),
                 _ => users
             };
             if (pagesize != 0)
@@ -103,7 +103,7 @@ namespace BurzaFirem2.Controllers.v1
         {
             ApplicationUser user = new ApplicationUser
             {
-                UserName = values.Email,
+                UserName = values.UserName,
                 Email = values.Email,
                 EmailConfirmed = true,
                 Created = DateTime.Now,
@@ -142,7 +142,7 @@ namespace BurzaFirem2.Controllers.v1
             }
 
             user.Email = input.Email;
-            user.UserName = input.Username;
+            user.UserName = input.UserName;
             await _um.UpdateAsync(user);
 
             return Ok();
@@ -211,6 +211,20 @@ namespace BurzaFirem2.Controllers.v1
         public async Task<ActionResult<List<IdentityRole>>> GetRolesAsync()
         {
             var roles = await _rm.Roles.ToListAsync();
+            return Ok(roles);
+        }
+
+        // GET api/v1/<UsersController>/5/roles
+        [HttpGet("{id}/roles")]
+        [Authorize(Policy = Security.ADMIN_POLICY)]
+        public async Task<ActionResult<List<IdentityRole>>> GetRolesAsync(Guid id)
+        {
+            var user = await _um.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var roles = await _um.GetRolesAsync(user);
             return Ok(roles);
         }
     }

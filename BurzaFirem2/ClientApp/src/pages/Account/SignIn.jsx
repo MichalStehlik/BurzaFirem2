@@ -32,7 +32,7 @@ export const SignIn = () => {
             <Form onSubmit={handleSubmit(onSubmit)}>
             <FormGroup>
             <Label for="username">Přihlašovací jméno</Label>
-            <Controller name="username" control={control} render={({ field }) => <Input type="email" placeholder="jmeno@firma.cz" {...field} />} />    
+            <Controller name="username" control={control} render={({ field }) => <Input {...field} />} />    
             </FormGroup>
             <FormGroup>
             <Label for="password">Heslo</Label>

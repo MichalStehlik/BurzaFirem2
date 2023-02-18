@@ -111,11 +111,11 @@ if (!app.Environment.IsDevelopment())
 {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-    app.UseExceptionHandler("/api/error");
+    //app.UseExceptionHandler("/api/error");
 }
 else
 {
-    app.UseExceptionHandler("/api/error-development");
+    //app.UseExceptionHandler("/api/error-development");
 }
 
 app.UseSwagger();
@@ -130,16 +130,10 @@ app.UseAuthorization();
 
 app.MapTus("/upload", async httpContext => new()
 {
-    // This method is called on each request so different configurations can be returned per user, domain, path etc.
-    // Return null to disable tusdotnet for the current request.
-
-    // Where to store data?
-
     Store = new tusdotnet.Stores.TusDiskStore(Path.Combine(app.Environment.ContentRootPath, builder.Configuration.GetValue<string>("Uploads:Path"))),
     MaxAllowedUploadSizeInBytes = 10000000,
     Events = new()
     {
-        // What to do when file is completely uploaded?
         OnFileCompleteAsync = async eventContext =>
         {
             var fsm = httpContext.RequestServices.GetService<FileStorageManager>();
