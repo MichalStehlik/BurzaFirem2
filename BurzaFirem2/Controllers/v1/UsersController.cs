@@ -1,7 +1,6 @@
 ﻿using BurzaFirem2.Constants;
 using BurzaFirem2.Data;
 using BurzaFirem2.InputModels;
-using BurzaFirem2.Migrations;
 using BurzaFirem2.Models;
 using BurzaFirem2.ViewModels;
 using Microsoft.AspNetCore.Authorization;

@@ -7,7 +7,7 @@ namespace BurzaFirem2.Models
     public class StoredImage
     {
         [Key]
-        public Guid ImageId { get; set; }
+        public string ImageId { get; set; }
         public ApplicationUser? Uploader { get; set; }
         [Required]
         public Guid UploaderId { get; set; }
@@ -15,9 +15,7 @@ namespace BurzaFirem2.Models
         public string OriginalName { get; set; } = String.Empty;
         [Required]
         public string ContentType { get; set; } = String.Empty;
-        [Required]
         public int? Width { get; set; }
-        [Required]
         public int? Height { get; set; }
         public Company? Company { get; set; }
         public int? CompanyId { get; set; }

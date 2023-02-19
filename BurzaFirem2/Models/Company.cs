@@ -10,7 +10,7 @@ namespace BurzaFirem2.Models
         [Required]
         public string Name { get; set; } = String.Empty;
         public StoredImage? Logo { get; set; } = null;
-        public Guid? LogoId { get; set; } = null;
+        public string? LogoId { get; set; } = null;
         public string? Description { get; set; } = String.Empty;
         public string? Wanted { get; set; } = String.Empty;
         public string? Offer { get; set; } = String.Empty;

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BurzaFirem2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230214220101_Images")]
-    partial class Images
+    [Migration("20230219234659_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -182,18 +182,18 @@ namespace BurzaFirem2.Migrations
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d31f2d6d-8ef2-429f-bd1a-a0ff704b6000",
-                            Created = new DateTime(2023, 2, 14, 23, 1, 1, 85, DateTimeKind.Local).AddTicks(8022),
+                            ConcurrencyStamp = "27dc2ca2-0e67-4f68-b0a5-f63781407e69",
+                            Created = new DateTime(2023, 2, 20, 0, 46, 59, 132, DateTimeKind.Local).AddTicks(9303),
                             Email = "jobs@pslib.cz",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "JOBS@PSLIB.CZ",
                             NormalizedUserName = "JOBS@PSLIB.CZ",
-                            PasswordHash = "AQAAAAEAACcQAAAAEH88eT4sYy7DBaE7ivSDgKM3OlNd8Qwr4ceyHXTcoXkvWS3NXDk5P5TWAlzWk3zf/Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJ7dOtzwtv9y99oSCIVptV+BNQLv4c95AxvBy2LujsEz0sSuhL6goG03TB8z3Y1yVA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI",
                             TwoFactorEnabled = false,
-                            Updated = new DateTime(2023, 2, 14, 23, 1, 1, 85, DateTimeKind.Local).AddTicks(8050),
+                            Updated = new DateTime(2023, 2, 20, 0, 46, 59, 132, DateTimeKind.Local).AddTicks(9334),
                             UserName = "jobs@pslib.cz"
                         });
                 });
@@ -284,8 +284,8 @@ namespace BurzaFirem2.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("LogoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("LogoId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Municipality")
                         .IsRequired()
@@ -327,13 +327,13 @@ namespace BurzaFirem2.Migrations
                             AddressStreet = "U Jezu 525/4",
                             CompanyBranches = "",
                             CompanyUrl = "https://www.hardwario.com/",
-                            Created = new DateTime(2023, 2, 14, 23, 1, 1, 86, DateTimeKind.Local).AddTicks(7175),
+                            Created = new DateTime(2023, 2, 20, 0, 46, 59, 133, DateTimeKind.Local).AddTicks(8478),
                             Description = "",
                             Municipality = "Liberec 460 01",
                             Name = "HARDWARIO s.r.o.",
                             Offer = "<p>Naším hlavním benefitem je to, že se vám u nás rozvinou vaše znalosti elektroniky a vývoje software a firmware, a to prací na reálných projektech.</p>",
                             PresentationUrl = "",
-                            Updated = new DateTime(2023, 2, 14, 23, 1, 1, 86, DateTimeKind.Local).AddTicks(7176),
+                            Updated = new DateTime(2023, 2, 20, 0, 46, 59, 133, DateTimeKind.Local).AddTicks(8479),
                             UserId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Wanted = "<p>Kluky i holky, kteří se chtějí podílet vývoji IoT řešení, která se uplatňují na celém světě. U nás nebudete uklízet a třídit, ale budete pracovat na skutečném vývoji a výrobě elektroniky.</p>"
                         });
@@ -395,14 +395,14 @@ namespace BurzaFirem2.Migrations
                         new
                         {
                             ListingId = 1,
-                            Created = new DateTime(2023, 2, 14, 23, 1, 1, 86, DateTimeKind.Local).AddTicks(7151),
+                            Created = new DateTime(2023, 2, 20, 0, 46, 59, 133, DateTimeKind.Local).AddTicks(8456),
                             Name = "2022",
                             Visible = true
                         },
                         new
                         {
                             ListingId = 2,
-                            Created = new DateTime(2023, 2, 14, 23, 1, 1, 86, DateTimeKind.Local).AddTicks(7159),
+                            Created = new DateTime(2023, 2, 20, 0, 46, 59, 133, DateTimeKind.Local).AddTicks(8460),
                             Name = "2023",
                             Visible = true
                         });
@@ -410,9 +410,8 @@ namespace BurzaFirem2.Migrations
 
             modelBuilder.Entity("BurzaFirem2.Models.StoredImage", b =>
                 {
-                    b.Property<Guid>("ImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ImageId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("CompanyId")
                         .HasColumnType("int");
@@ -428,7 +427,6 @@ namespace BurzaFirem2.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("Height")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("OriginalName")
@@ -439,7 +437,6 @@ namespace BurzaFirem2.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("Width")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("ImageId");
@@ -463,8 +460,8 @@ namespace BurzaFirem2.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<Guid>("FileId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("FileId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ImageId", "Type");
 
@@ -519,14 +516,14 @@ namespace BurzaFirem2.Migrations
                         new
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111110000"),
-                            ConcurrencyStamp = "1440ae0f-52fe-4c68-bdd4-b7a1e554131f",
+                            ConcurrencyStamp = "3975ec05-c967-4215-9ce7-c3de15001da6",
                             Name = "Administrátor",
                             NormalizedName = "ADMINISTRÁTOR"
                         },
                         new
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222220000"),
-                            ConcurrencyStamp = "6594e97a-1f4a-4093-9153-d2395d2888cc",
+                            ConcurrencyStamp = "35e791f7-ec52-4ff5-9e2e-fad84d1518ba",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });
@@ -738,9 +735,7 @@ namespace BurzaFirem2.Migrations
                 {
                     b.HasOne("BurzaFirem2.Models.StoredImage", "Image")
                         .WithMany("Thumbnails")
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FileId");
 
                     b.Navigation("Image");
                 });

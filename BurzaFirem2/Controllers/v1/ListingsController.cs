@@ -49,7 +49,7 @@ namespace BurzaFirem2.Controllers.v1
                 listings = listings.Skip(page * pagesize).Take(pagesize);
             }
             int count = listings.CountAsync().Result;
-            return new ListVM<Listing> { Total = total, Filtered = filtered, Count = count, Page = page, Pagesize = pagesize, Data = listings.ToList() };
+            return new ListVM<Listing> { Total = total, Filtered = filtered, Count = count, Page = page, Pagesize = pagesize, Data = await listings.ToListAsync() };
         }
 
         // GET: api/Listings/5

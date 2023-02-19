@@ -20,15 +20,21 @@ const List = () => {
 
     const handleFilesSelected = e => {
       var file = e.target.files[0];
+      setUploadError(false);
+      setUploadProgress(0);
       setIsUploading(true);
       var upload = new tus.Upload(file, {
         endpoint: "https://localhost:44416/upload/",
         retryDelays: [0, 3000, 5000, 10000, 20000],
         metadata: {
           filename: file.name,
-          filetype: file.type
+          contentType: file.type
+        },
+        headers: {
+          Authorization: "Bearer " + accessToken
         },
         onError: function (error) {
+          console.error(error);
           setUploadError(error);
         },
         onProgress: function (bytesUploaded, bytesTotal) {
@@ -92,13 +98,11 @@ const List = () => {
         })();    
       },[accessToken]);
 
-      
-
       const columns = useMemo(() => [
         {Header: "Název", accessor: "originalName"},      
         {Header: "Typ", accessor: "contentType"},
         {Header: "Nahráno", accessor: "created", disableFilters:true, Cell: (data)=>(<DateTime date={data.cell.value} />)},
-        {Header: "Akce", Cell: (data)=>(<Link to={"" + data.row.original.id}>Detail</Link>)}
+        {Header: "Akce", Cell: (data)=>(<Link to={"" + data.row.original.imageId}>Detail</Link>)}
     ]); 
 
     return (
@@ -121,7 +125,7 @@ const List = () => {
             }
             {uploadError
             ?
-              <Alert color="danger">{uploadError}</Alert>
+              <Alert color="danger">Při nahrávání souboru došlo k chybě. Soubor mohl být příliš velký, nemusel mít podporovaný typ (obrázek) nebo k této akci nestačila Vaše práve.</Alert>
             :
               null
             }

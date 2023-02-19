@@ -68,6 +68,12 @@ namespace BurzaFirem2.Controllers.v1
             return new ListVM<StoredImage> { Total = total, Filtered = filtered, Count = count, Page = page, Pagesize = pagesize, Data = await images.ToListAsync() };
         }
 
+        [HttpGet("filenames")]
+        public List<string> GetFilenames()
+        {
+            return _fsm.GetFileNames();
+        } 
+
         // GET: api/v1/Images/5
         [HttpGet("{id}")]
         public async Task<ActionResult<StoredImage>> GetStoredImage(Guid id)
@@ -126,7 +132,7 @@ namespace BurzaFirem2.Controllers.v1
             return NoContent();
         }
 
-        private bool StoredImageExists(Guid id)
+        private bool StoredImageExists(string id)
         {
             return _context.Images.Any(e => e.ImageId == id);
         }
