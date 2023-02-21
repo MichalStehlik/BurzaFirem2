@@ -132,11 +132,11 @@ const Detail = props => {
             :
             null
                 }
-                {response.logoFileName
+                {response.logoId
                     ?
-                    <div className="text-center">
+                    <div className="text-center m-3">
                         <a href={response.companyUrl.startsWith("http") ? response.companyUrl : ("https://" + response.companyUrl)}>
-                            <img src={response.logoFileName} alt={response.name} className="mb-3" style={{ maxHeight: "84px" }} />
+                            <img src={"/api/v1/images/" + response.logoId + "/content"} alt={response.name} className="mb-3" style={{ maxHeight: "128px" }} />
                         </a>
                     </div>
                     :

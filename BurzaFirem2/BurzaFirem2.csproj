@@ -47,9 +47,9 @@
     <Folder Include="Emails\Pages\Shared\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Logs\" />
-    <Folder Include="Migrations\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Files\" />
+    <Folder Include="Upload\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

@@ -19,6 +19,7 @@ import UsersDetail from "./pages/Admin/Users/Detail"
 import UsersCreate from "./pages/Admin/Users/Create"
 import ImagesLayout from "./pages/Admin/Images"
 import ImagesList from "./pages/Admin/Images/List"
+import ImagesDetail from "./pages/Admin/Images/Detail"
 import NotFound from "./pages/Special/NotFound"
 import Unauthorized from "./pages/Special/Unauthorized"
 import './custom.css'
@@ -45,6 +46,7 @@ export default class App extends Component {
             </Route> 
             <Route path='/admin/images' element={<ImagesLayout />}>
               <Route index element={<ImagesList />} />
+              <Route path="/admin/images/:id" element={<ImagesDetail />} />
             </Route> 
           </Route>
           <Route path='/account' element={<AccountLayout />}>

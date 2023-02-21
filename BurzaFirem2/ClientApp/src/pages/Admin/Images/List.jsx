@@ -24,7 +24,7 @@ const List = () => {
       setUploadProgress(0);
       setIsUploading(true);
       var upload = new tus.Upload(file, {
-        endpoint: "https://localhost:44416/upload/",
+        endpoint: "/upload/",
         retryDelays: [0, 3000, 5000, 10000, 20000],
         metadata: {
           filename: file.name,
@@ -43,7 +43,8 @@ const List = () => {
           console.log(bytesUploaded, bytesTotal, percentage + "%")
         },
         onSuccess: function () {
-          console.log("Download %s from %s", upload.file.name, upload.url)
+          console.log("Download %s from %s", upload.file.name, upload.url);
+          fetchData({page: 0, sort: [], filters: []})
         }
       });
       upload.findPreviousUploads().then(function (previousUploads) {
@@ -55,7 +56,31 @@ const List = () => {
       setIsUploading(false);
     };
 
+    const handleFilesUpload = e => { 
+      setIsUploading(true);
+      setUploadError(false);
+      const formData = new FormData();
+      var file = e.target.files[0];
+      formData.append(
+        "file",
+        file
+      );
+      axios.post("api/v1/images", 
+        formData, 
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            "Content-Type": file.type
+          }
+        }
+      )
+      .then(response => {fetchData({page: 0, sort: [], filters: []})})
+      .catch(error => {setUploadError("Při nahrávání souboru došlo k chybě.")})
+      .then(()=>{setIsUploading(false)})
+    }
+
     const fetchData = useCallback(({page, size = 0, sort, filters})=>{
+      console.log(page, size, sort, filters);
         (async () => {
           setIsLoading(true);
           setError(false);
@@ -100,8 +125,11 @@ const List = () => {
 
       const columns = useMemo(() => [
         {Header: "Název", accessor: "originalName"},      
-        {Header: "Typ", accessor: "contentType"},
-        {Header: "Nahráno", accessor: "created", disableFilters:true, Cell: (data)=>(<DateTime date={data.cell.value} />)},
+        {Header: "Typ", accessor: "contentType", disableFilters:true},
+        {Header: "Výška", accessor: "height", disableFilters:true},
+        {Header: "Šířka", accessor: "width", disableFilters:true},
+        {Header: "Vlastník", accessor: "uploader", disableFilters:true, Cell: (data)=>(data.cell.value.email)},
+        {Header: "Nahráno", accessor: "created", disableFilters:true, Cell: (data)=>(<DateTime date={data.cell.value} />)},    
         {Header: "Akce", Cell: (data)=>(<Link to={"" + data.row.original.imageId}>Detail</Link>)}
     ]); 
 
@@ -116,6 +144,7 @@ const List = () => {
                 error={error}
                 totalPages={totalPages}
             />
+            <p>TUS (velké soubory)</p>
             <Input type="file" name="file" id="file" onChange={handleFilesSelected} ref={fileUploader} />
             {isUploading 
             ?
@@ -129,6 +158,8 @@ const List = () => {
             :
               null
             }
+            <p>Upload</p>
+            <Input type="file" name="upload" id="upload" onChange={handleFilesUpload} />
         </>
     );
 }

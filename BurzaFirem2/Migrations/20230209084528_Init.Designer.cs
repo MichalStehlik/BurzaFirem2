@@ -4,6 +4,7 @@ using BurzaFirem2.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BurzaFirem2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230209084528_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,18 +182,18 @@ namespace BurzaFirem2.Migrations
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d31f2d6d-8ef2-429f-bd1a-a0ff704b6000",
-                            Created = new DateTime(2023, 2, 14, 23, 1, 1, 85, DateTimeKind.Local).AddTicks(8022),
+                            ConcurrencyStamp = "3e20bada-4052-450d-b8df-525decb0b846",
+                            Created = new DateTime(2023, 2, 9, 9, 45, 27, 455, DateTimeKind.Local).AddTicks(7198),
                             Email = "jobs@pslib.cz",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "JOBS@PSLIB.CZ",
                             NormalizedUserName = "JOBS@PSLIB.CZ",
-                            PasswordHash = "AQAAAAEAACcQAAAAEH88eT4sYy7DBaE7ivSDgKM3OlNd8Qwr4ceyHXTcoXkvWS3NXDk5P5TWAlzWk3zf/Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMe6W2+2AazsiZh/Pyd85UtNem0UqM7AYXAKeSKEwOl+frclVmUwX+vRZLUTHaHMdQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI",
                             TwoFactorEnabled = false,
-                            Updated = new DateTime(2023, 2, 14, 23, 1, 1, 85, DateTimeKind.Local).AddTicks(8050),
+                            Updated = new DateTime(2023, 2, 9, 9, 45, 27, 455, DateTimeKind.Local).AddTicks(7242),
                             UserName = "jobs@pslib.cz"
                         });
                 });
@@ -325,13 +327,13 @@ namespace BurzaFirem2.Migrations
                             AddressStreet = "U Jezu 525/4",
                             CompanyBranches = "",
                             CompanyUrl = "https://www.hardwario.com/",
-                            Created = new DateTime(2023, 2, 14, 23, 1, 1, 86, DateTimeKind.Local).AddTicks(7175),
+                            Created = new DateTime(2023, 2, 9, 9, 45, 27, 458, DateTimeKind.Local).AddTicks(7013),
                             Description = "",
                             Municipality = "Liberec 460 01",
                             Name = "HARDWARIO s.r.o.",
                             Offer = "<p>Naším hlavním benefitem je to, že se vám u nás rozvinou vaše znalosti elektroniky a vývoje software a firmware, a to prací na reálných projektech.</p>",
                             PresentationUrl = "",
-                            Updated = new DateTime(2023, 2, 14, 23, 1, 1, 86, DateTimeKind.Local).AddTicks(7176),
+                            Updated = new DateTime(2023, 2, 9, 9, 45, 27, 458, DateTimeKind.Local).AddTicks(7018),
                             UserId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Wanted = "<p>Kluky i holky, kteří se chtějí podílet vývoji IoT řešení, která se uplatňují na celém světě. U nás nebudete uklízet a třídit, ale budete pracovat na skutečném vývoji a výrobě elektroniky.</p>"
                         });
@@ -393,14 +395,14 @@ namespace BurzaFirem2.Migrations
                         new
                         {
                             ListingId = 1,
-                            Created = new DateTime(2023, 2, 14, 23, 1, 1, 86, DateTimeKind.Local).AddTicks(7151),
+                            Created = new DateTime(2023, 2, 9, 9, 45, 27, 458, DateTimeKind.Local).AddTicks(6936),
                             Name = "2022",
                             Visible = true
                         },
                         new
                         {
                             ListingId = 2,
-                            Created = new DateTime(2023, 2, 14, 23, 1, 1, 86, DateTimeKind.Local).AddTicks(7159),
+                            Created = new DateTime(2023, 2, 9, 9, 45, 27, 458, DateTimeKind.Local).AddTicks(6955),
                             Name = "2023",
                             Visible = true
                         });
@@ -422,11 +424,7 @@ namespace BurzaFirem2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("Height")
-                        .IsRequired()
+                    b.Property<int>("Height")
                         .HasColumnType("int");
 
                     b.Property<string>("OriginalName")
@@ -436,8 +434,7 @@ namespace BurzaFirem2.Migrations
                     b.Property<Guid>("UploaderId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("Width")
-                        .IsRequired()
+                    b.Property<int>("Width")
                         .HasColumnType("int");
 
                     b.HasKey("ImageId");
@@ -517,14 +514,14 @@ namespace BurzaFirem2.Migrations
                         new
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111110000"),
-                            ConcurrencyStamp = "1440ae0f-52fe-4c68-bdd4-b7a1e554131f",
+                            ConcurrencyStamp = "4a83271a-c404-45f1-8323-a1a3e1127011",
                             Name = "Administrátor",
                             NormalizedName = "ADMINISTRÁTOR"
                         },
                         new
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222220000"),
-                            ConcurrencyStamp = "6594e97a-1f4a-4093-9153-d2395d2888cc",
+                            ConcurrencyStamp = "008764f3-26eb-43e4-b401-de71757388b5",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });

@@ -91,14 +91,15 @@ export const DataTable = ({columns, data, fetchData, isLoading, error, totalPage
           </tbody>
           <tfoot>
             <tr>
-              <td>
-                <Row>
+              <td colSpan={1000}>
+                <Row className="w-100 d-flex justify-content-between">
                   <Col>
                   <ButtonGroup className="me-2">
                     <Button variant="secondary" size="sm" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>⇤</Button>{' '}
                     <Button variant="secondary" size="sm" onClick={() => previousPage()} disabled={!canPreviousPage}>←</Button>{' '}
                     <Button variant="secondary" size="sm" onClick={() => nextPage()} disabled={!canNextPage} >→</Button>{' '}
                     <Button variant="secondary" size="sm" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>⭲</Button>{' '}
+                    <Button variant="secondary" size="sm" onClick={() => setAllFilters([])}>Reset</Button>{' '}
                   </ButtonGroup>
                   </Col>
                   <Col>
@@ -106,12 +107,23 @@ export const DataTable = ({columns, data, fetchData, isLoading, error, totalPage
                   {[...Array(pageCount).keys()].map((num) => (<Button size="sm" variant="outline-secondary" key={num} onClick={() => { gotoPage(num) }}>{num + 1}</Button>))}
                   </ButtonGroup>
                   </Col>
+                  <Col>
+                    <ButtonGroup className="me-2">
+                      {[10, 50, 100, 500].map(ps => (
+                        <Button variant={(state.pageSize === ps) ? "primary" : "secondary"} size="sm" onClick={() => setPageSize(ps)}>{ps}</Button>
+                      ))}
+                    </ButtonGroup>
+                  </Col>
                 </Row>
               </td>
             </tr>
           </tfoot>
         </Table>
     )   
+}
+
+DataTable.defaultProps = {
+  initialState: { pageIndex: 0, pageSize: 50 }
 }
 
 export default DataTable;

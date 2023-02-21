@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace BurzaFirem2.Models
 {
@@ -9,8 +10,9 @@ namespace BurzaFirem2.Models
         public int CompanyId { get; set; }
         [Required]
         public string Name { get; set; } = String.Empty;
+        [JsonIgnore]
         public StoredImage? Logo { get; set; } = null;
-        public string? LogoId { get; set; } = null;
+        public Guid? LogoId { get; set; } = null;
         public string? Description { get; set; } = String.Empty;
         public string? Wanted { get; set; } = String.Empty;
         public string? Offer { get; set; } = String.Empty;

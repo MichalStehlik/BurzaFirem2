@@ -2,6 +2,7 @@
 using BurzaFirem2.Data;
 using BurzaFirem2.InputModels;
 using BurzaFirem2.Models;
+using BurzaFirem2.Services;
 using BurzaFirem2.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,12 +23,14 @@ namespace BurzaFirem2.Controllers.v1
         private readonly ApplicationDbContext _context;
         private ILogger<CompaniesController> _logger;
         private readonly IAuthorizationService _authorizationService;
+        private FileStorageManager _fsm;
 
-        public CompaniesController(ApplicationDbContext context, ILogger<CompaniesController> logger, IAuthorizationService authorizationService)
+        public CompaniesController(ApplicationDbContext context, ILogger<CompaniesController> logger, IAuthorizationService authorizationService, FileStorageManager fsm)
         {
             _context = context;
             _logger = logger;
             _authorizationService = authorizationService;
+            _fsm = fsm;
         }
 
         // GET: api/v1/Companies
@@ -601,6 +604,66 @@ namespace BurzaFirem2.Controllers.v1
             }
 
             return CreatedAtAction("GetCompany", new { id = company.CompanyId }, company);
+        }
+        #endregion
+        #region Logo
+        [HttpGet("{id}/logo")]
+        public async Task<ActionResult<StoredImage?>> GetCompanyLogo(int id)
+        {
+            var company = await _context.Companies.Include(c => c.Logo).Where(c => c.CompanyId == id).SingleOrDefaultAsync();
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            return company.Logo;
+        }
+
+        [HttpDelete("{id}/logo")]
+        [Authorize(Policy = Security.EDITOR_POLICY)]
+        public async Task<ActionResult<Contact>> DeleteCompanyLogo(int id)
+        {
+            var company = await _context.Companies.Where(c => c.CompanyId == id).SingleOrDefaultAsync();
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            var isAdmin = await _authorizationService.AuthorizeAsync(User, Security.ADMIN_POLICY);
+            if (!User.HasClaim(ClaimTypes.NameIdentifier, company.UserId.ToString()) && !isAdmin.Succeeded)
+            {
+                return Unauthorized("only owner or privileged user can edit a company record");
+            }
+
+            company.LogoId = null;
+            company.Updated = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetCompany", new { id = company.CompanyId }, company);
+        }
+
+        [HttpPost("{id}/logo")]
+        [Authorize(Policy = Security.EDITOR_POLICY)]
+        public async Task<ActionResult<StoredImage>> PostCompanyLogo(int id)
+        {
+            Guid uid = Guid.Parse(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value);
+            var company = await _context.Companies.Where(c => c.CompanyId == id).SingleOrDefaultAsync();
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            if (Request.Form.Files.Count == 1)
+            {
+                var file = Request.Form.Files[0];                
+                var record = await _fsm.Store(file);
+                company.LogoId = record.ImageId;
+                company.Updated = DateTime.Now;
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetStoredImage", new { id = record.ImageId }, record);
+            }
+            return BadRequest("pick only one file");
         }
         #endregion
     }

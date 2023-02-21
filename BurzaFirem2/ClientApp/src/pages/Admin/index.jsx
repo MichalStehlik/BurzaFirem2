@@ -12,10 +12,15 @@ export const AdminLayout = () => {
     
     return (
       <div>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container light fixed="top" tag="header">
+        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container color="light" light fixed="top" tag="header">
             <NavbarBrand tag={Link} to="/">{config.applicationName}</NavbarBrand>
             <NavbarToggler onClick={e => setNavbarOpen(prev => !prev)} className="mr-2" />
-            <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={navbarOpen} navbar>
+            <Collapse className="d-sm-inline-flex flex-sm-row justify-content-between" isOpen={navbarOpen} navbar>
+            <ul className="navbar-nav flex-grow">
+              <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/admin">Administrace</NavLink>
+              </NavItem>
+            </ul>
             <ul className="navbar-nav flex-grow">
               <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/admin/companies">Firmy</NavLink>

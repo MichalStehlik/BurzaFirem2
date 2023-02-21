@@ -88,6 +88,23 @@ namespace BurzaFirem2.Controllers.v1
             return storedImage;
         }
 
+        [HttpGet("{id}/content")]
+        public async Task<ActionResult> GetStoredImageContent(Guid id)
+        {
+            var storedImage = await _context.Images.FindAsync(id);
+
+            if (storedImage == null)
+            {
+                return NotFound("no file record exists");
+            }
+
+            if (!_fsm.FileExists(id))
+            {
+                return NotFound("file does not physically exists");
+            }
+            return PhysicalFile(_fsm.FileName(id), storedImage.ContentType, storedImage.OriginalName);
+        }
+
         // POST: api/v1/Images
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -98,19 +115,8 @@ namespace BurzaFirem2.Controllers.v1
             if (user != null && Request.Form.Files.Count == 1)
             {
                 var file = Request.Form.Files[0];
-                var path = Path.Combine(_environment.ContentRootPath, "Uploads", file.FileName);
-                using (var fileStream = new FileStream(path, FileMode.Create))
-                {
-                    await file.CopyToAsync(fileStream);
-                };
-                var entry = new StoredImage {
-                    OriginalName= file.FileName,
-                    ContentType= file.ContentType,
-                    UploaderId = user.Id
-                };
-                _context.Images.Add(entry);
-                await _context.SaveChangesAsync();
-                return CreatedAtAction("GetStoredImage", new { id = entry.ImageId }, entry);
+                var record = await _fsm.Store(file);
+                return CreatedAtAction("GetStoredImage", new { id = record.ImageId }, record);
             }
             return NotFound("user not found");
         }
@@ -125,14 +131,14 @@ namespace BurzaFirem2.Controllers.v1
             {
                 return NotFound();
             }
-
-            _context.Images.Remove(storedImage);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            if (await _fsm.DeleteFileAsync(id))
+            {
+                return NoContent();
+            }
+            return BadRequest();
         }
 
-        private bool StoredImageExists(string id)
+        private bool StoredImageExists(Guid id)
         {
             return _context.Images.Any(e => e.ImageId == id);
         }

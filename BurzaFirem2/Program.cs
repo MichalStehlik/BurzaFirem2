@@ -136,7 +136,7 @@ app.UseAuthorization();
 
 app.MapTus("/" + builder.Configuration.GetValue<string>("Upload:Endpoint"), async httpContext => new()
 {
-    Store = new tusdotnet.Stores.TusDiskStore(Path.Combine(app.Environment.ContentRootPath, builder.Configuration.GetValue<string>("Upload:Path"))),
+    Store = new tusdotnet.Stores.TusDiskStore(Path.Combine(app.Environment.ContentRootPath, builder.Configuration.GetValue<string>("Upload:UploadPath"))),
     MaxAllowedUploadSizeInBytes = 100000000,
     Events = new()
     {
@@ -172,10 +172,8 @@ app.MapTus("/" + builder.Configuration.GetValue<string>("Upload:Endpoint"), asyn
         OnFileCompleteAsync = async eventContext =>
         {
             var fsm = httpContext.RequestServices.GetService<FileStorageManager>();
-
             ITusFile file = await eventContext.GetFileAsync();
-
-            await fsm.StoreTus(file, eventContext.CancellationToken);
+            var image = await fsm.StoreTus(file, eventContext.CancellationToken);
         }
     }
 });
