@@ -182,6 +182,8 @@ namespace BurzaFirem2.Controllers.v1
             company.Municipality = input.Municipality;
             company.Updated = DateTime.UtcNow;
             company.CompanyBranches = input.CompanyBranches;
+            company.CompanyUrl = input.CompanyUrl;
+            company.PresentationUrl = input.PresentationUrl;
 
             try
             {
@@ -651,6 +653,11 @@ namespace BurzaFirem2.Controllers.v1
             if (company == null)
             {
                 return NotFound();
+            }
+            var isAdmin = await _authorizationService.AuthorizeAsync(User, Security.ADMIN_POLICY);
+            if (!User.HasClaim(ClaimTypes.NameIdentifier, company.UserId.ToString()) && !isAdmin.Succeeded)
+            {
+                return Unauthorized("only owner or privileged user can edit a company record");
             }
 
             if (Request.Form.Files.Count == 1)
