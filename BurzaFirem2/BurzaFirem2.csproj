@@ -45,10 +45,10 @@
 
   <ItemGroup>
     <Folder Include="Emails\Pages\Shared\" />
+    <Folder Include="Files\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Logs\" />
     <Folder Include="Exceptions\" />
-    <Folder Include="Files\" />
     <Folder Include="Upload\" />
   </ItemGroup>
 

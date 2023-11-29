@@ -154,7 +154,7 @@ const List = () => {
             }
             {uploadError
             ?
-              <Alert color="danger">Při nahrávání souboru došlo k chybě. Soubor mohl být příliš velký, nemusel mít podporovaný typ (obrázek) nebo k této akci nestačila Vaše práve.</Alert>
+              <Alert color="danger">Při nahrávání souboru došlo k chybě. Soubor mohl být příliš velký, nemusel mít podporovaný typ (obrázek) nebo k této akci nestačila Vaše práva.</Alert>
             :
               null
             }
