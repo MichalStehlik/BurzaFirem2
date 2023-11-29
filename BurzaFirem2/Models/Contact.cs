@@ -9,7 +9,7 @@ namespace BurzaFirem2.Models
         public string Email { get; set; } = String.Empty;
         public string Phone { get; set; } = String.Empty;
         [JsonIgnore]
-        public Company Company { get; set; }
+        public Company? Company { get; set; }
         public int CompanyId { get; set; }
     }
 }

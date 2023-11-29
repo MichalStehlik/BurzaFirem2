@@ -1,11 +1,12 @@
 ﻿using Azure.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
+using Microsoft.Graph.Users.Item.SendMail;
 
 namespace BurzaFirem2.Services
 {
-    public class EmailSender : IEmailSender
+    public class EmailSender
     {
         private readonly EmailOptions _options;
         private readonly ILogger<EmailSender> _logger;
@@ -18,19 +19,23 @@ namespace BurzaFirem2.Services
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            var message = new Message
+            var requestBody = new SendMailPostRequestBody
             {
-                Subject = subject,
-                Body = new ItemBody
+                Message = new Message
                 {
-                    ContentType = BodyType.Html,
-                    Content = htmlMessage
-                },
-                ToRecipients = new List<Recipient>()
-                {
-                    new Recipient {EmailAddress = new EmailAddress {Address = email } }
+                    Subject = subject,
+                    Body = new ItemBody
+                    {
+                        ContentType = BodyType.Html,
+                        Content = htmlMessage
+                    },
+                    ToRecipients = new List<Recipient>()
+                    {
+                        new Recipient {EmailAddress = new EmailAddress {Address = email } }
+                    }
                 }
             };
+            
             string[] scopes = new string[] { "https://graph.microsoft.com/.default" };
 
             var options = new TokenCredentialOptions
@@ -45,25 +50,25 @@ namespace BurzaFirem2.Services
                 options);
             //var authProvider = new ClientCredentialProvider(confidentialClientApplication);
             var graphClient = new GraphServiceClient(authProvider);
-            await graphClient.Users[_options.UserId]
-                .SendMail(message, false)
-                .Request()
-                .PostAsync();
+            await graphClient.Users[_options.UserId].SendMail.PostAsync(requestBody);
         }
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage, string plainMessage)
         {
-            var message = new Message
+            var requestBody = new SendMailPostRequestBody
             {
-                Subject = subject,
-                Body = new ItemBody
+                Message = new Message
                 {
-                    ContentType = BodyType.Html,
-                    Content = htmlMessage
-                },
-                ToRecipients = new List<Recipient>()
-                {
-                    new Recipient {EmailAddress = new EmailAddress {Address = email } }
+                    Subject = subject,
+                    Body = new ItemBody
+                    {
+                        ContentType = BodyType.Html,
+                        Content = htmlMessage
+                    },
+                    ToRecipients = new List<Recipient>()
+                    {
+                        new Recipient {EmailAddress = new EmailAddress {Address = email } }
+                    }
                 }
             };
             string[] scopes = new string[] { "https://graph.microsoft.com/.default" };
@@ -80,10 +85,7 @@ namespace BurzaFirem2.Services
                 options);
             //var authProvider = new ClientCredentialProvider(confidentialClientApplication);
             var graphClient = new GraphServiceClient(authProvider);
-            await graphClient.Users[_options.UserId]
-                .SendMail(message, false)
-                .Request()
-                .PostAsync();
+            await graphClient.Users[_options.UserId].SendMail.PostAsync(requestBody);
         }
     }
 

@@ -45,11 +45,11 @@ namespace BurzaFirem2.Controllers.v1
             IQueryable<ApplicationUser> users = _context.Users.AsQueryable();
             int total = users.CountAsync().Result;
             if (!String.IsNullOrEmpty(search))
-                users = users.Where(i => (i.UserName.Contains(search)));
+                users = users.Where(i => (i.UserName!.Contains(search)));
             if (!String.IsNullOrEmpty(email))
-                users = users.Where(i => (i.Email.Contains(email)));
+                users = users.Where(i => (i.Email!.Contains(email)));
             if (!String.IsNullOrEmpty(username))
-                users = users.Where(i => (i.UserName.Contains(username)));
+                users = users.Where(i => (i.UserName!.Contains(username)));
             int filtered = users.CountAsync().Result;
             users = order switch
             {
@@ -114,11 +114,11 @@ namespace BurzaFirem2.Controllers.v1
                 var currentUser = await _um.FindByNameAsync(user.UserName);
                 if (values.Admin == true)
                 {
-                    var roleResult = await _um.AddToRoleAsync(currentUser, "Administrátor");
+                    var roleResult = await _um.AddToRoleAsync(currentUser!, "Administrátor");
                 }
                 if (values.Editor == true)
                 {
-                    var roleResult = await _um.AddToRoleAsync(currentUser, "Editor");
+                    var roleResult = await _um.AddToRoleAsync(currentUser!, "Editor");
                 }
                 return CreatedAtAction("GetUser", new { id = user.Id }, user);
             }

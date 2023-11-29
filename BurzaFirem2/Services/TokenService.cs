@@ -35,16 +35,16 @@ namespace BurzaFirem2.Services
             var tokenKey = Encoding.UTF8.GetBytes(_options.Key);
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Name, user.UserName),
+                new(ClaimTypes.Name, user.UserName!),
                 new("sub", user.Id.ToString()),
-                new(ClaimTypes.Email, user.Email)
+                new(ClaimTypes.Email, user.Email!)
             };
 
             var roles = await _um.GetRolesAsync(user);
             foreach (var role in roles)
             {
                 var r = await _rm.FindByNameAsync(role);
-                var claimsInRole = await _rm.GetClaimsAsync(r);
+                var claimsInRole = await _rm.GetClaimsAsync(r!);
                 claims.AddRange(claimsInRole);
             }
             var userClaims = await _um.GetClaimsAsync(user);

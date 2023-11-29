@@ -57,12 +57,12 @@ namespace BurzaFirem2.Controllers.v1
                 companies = companies.Where(i => (i.Name.Contains(name)));
             if (!String.IsNullOrEmpty(branches))
             {
-                List<int> branchesList = branches?.Split(',').Select(Int32.Parse).ToList();
+                List<int> branchesList = branches!.Split(',').Select(Int32.Parse).ToList();
                 companies = companies.Where(c => c.Branches.Any(b => branchesList.Contains(b.BranchId)));
             }
             if (!String.IsNullOrEmpty(activities))
             {
-                List<int> activitiesList = activities?.Split(',').Select(Int32.Parse).ToList();
+                List<int> activitiesList = activities!.Split(',').Select(Int32.Parse).ToList();
                 companies = companies.Where(c => c.Activities.Any(a => activitiesList.Contains(a.ActivityId)));
             }
             if (listing != null)
@@ -118,7 +118,7 @@ namespace BurzaFirem2.Controllers.v1
                 Wanted = input.Wanted,
                 Offer = input.Offer,
                 CompanyBranches = input.CompanyBranches,
-                UserId = Guid.Parse(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value),
+                UserId = Guid.Parse(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value),
                 Created = DateTime.Now,
                 Updated = DateTime.Now
             };
@@ -367,7 +367,7 @@ namespace BurzaFirem2.Controllers.v1
                 return NotFound();
             }
 
-            return await _context.Branches.Include(b => b.Companies).Where(b => b.Companies.Contains(new Company { CompanyId = id })).ToListAsync();
+            return await _context.Branches.Include(b => b.Companies).Where(b => b.Companies!.Contains(new Company { CompanyId = id })).ToListAsync();
         }
 
         [HttpPost("{id}/branches")]
@@ -453,7 +453,7 @@ namespace BurzaFirem2.Controllers.v1
                 return NotFound();
             }
 
-            return await _context.Activities.Include(b => b.Companies).Where(b => b.Companies.Contains(new Company { CompanyId = id })).ToListAsync();
+            return await _context.Activities.Include(b => b.Companies).Where(b => b.Companies!.Contains(new Company { CompanyId = id })).ToListAsync();
         }
 
         [HttpPost("{id}/activities")]
@@ -648,7 +648,7 @@ namespace BurzaFirem2.Controllers.v1
         [Authorize(Policy = Security.EDITOR_POLICY)]
         public async Task<ActionResult<StoredImage>> PostCompanyLogo(int id)
         {
-            Guid uid = Guid.Parse(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value);
+            Guid uid = Guid.Parse(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value);
             var company = await _context.Companies.Where(c => c.CompanyId == id).SingleOrDefaultAsync();
             if (company == null)
             {

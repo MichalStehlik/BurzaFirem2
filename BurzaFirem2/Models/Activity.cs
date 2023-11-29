@@ -7,7 +7,7 @@ namespace BurzaFirem2.Models
         public int ActivityId { get; set; }
         public string Name { get; set; } = String.Empty;
         [JsonIgnore]
-        public ICollection<Company> Companies { get; set; }
+        public ICollection<Company>? Companies { get; set; }
         public bool Visible { get; set; } = true;
     }
 }

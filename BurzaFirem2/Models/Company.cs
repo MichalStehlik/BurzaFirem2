@@ -31,7 +31,7 @@ namespace BurzaFirem2.Models
         public Guid UserId { get; set; } 
         [Required]
         [ForeignKey("UserId")]
-        public ApplicationUser User { get; set; }
+        public ApplicationUser? User { get; set; }
         [Required]
         [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }

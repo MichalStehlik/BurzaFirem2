@@ -2,10 +2,8 @@
 using BurzaFirem2.Data;
 using BurzaFirem2.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Graph.SecurityNamespace;
 
 namespace BurzaFirem2.Controllers.v1
 {

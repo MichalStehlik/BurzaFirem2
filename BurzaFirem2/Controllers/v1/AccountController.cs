@@ -5,13 +5,10 @@ using BurzaFirem2.Models;
 using BurzaFirem2.Services;
 using BurzaFirem2.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Graph;
-using Microsoft.Identity.Client;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -25,13 +22,13 @@ namespace BurzaFirem2.Controllers.v1
     {
         private ILogger<AccountController> _logger;
         private ApplicationDbContext _context { get; set; }
-        private readonly IEmailSender _mailer;
+        private readonly EmailSender _mailer;
         private readonly RazorViewToStringRenderer _renderer;
         private readonly UserManager<ApplicationUser> _um;
         private readonly SignInManager<ApplicationUser> _sim;
         private readonly TokenService _ts;
 
-        public AccountController(ILogger<AccountController> logger, ApplicationDbContext context, IEmailSender mailer, RazorViewToStringRenderer renderer, UserManager<ApplicationUser> um, SignInManager<ApplicationUser> sim, TokenService ts)
+        public AccountController(ILogger<AccountController> logger, ApplicationDbContext context, EmailSender mailer, RazorViewToStringRenderer renderer, UserManager<ApplicationUser> um, SignInManager<ApplicationUser> sim, TokenService ts)
         {
             _logger = logger;
             _context = context;
@@ -46,7 +43,7 @@ namespace BurzaFirem2.Controllers.v1
         [Authorize]
         public async Task<ActionResult<UserVM>> GetUserAsync()
         {
-            var userId = Guid.Parse(User!.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value);
+            var userId = Guid.Parse(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value);
             var user = await _um.FindByIdAsync(userId.ToString());
             if (user is not null)
             {
@@ -149,8 +146,8 @@ namespace BurzaFirem2.Controllers.v1
         [Route("send-password-recovery")]
         public async Task<IActionResult> SendRecoveryEmailAsync(EmailIM input)
         {
-            var user = await _um.FindByEmailAsync(input.Email);
-            if (user == null || !(await _um.IsEmailConfirmedAsync(user)))
+            var user = await _um.FindByEmailAsync(input.Email!);
+            if (user != null && !(await _um.IsEmailConfirmedAsync(user)))
             {
                 var code = await _um.GeneratePasswordResetTokenAsync(user);
                 _logger.LogInformation("Recovery email for " + input.Email + " can be sent.");
@@ -163,7 +160,7 @@ namespace BurzaFirem2.Controllers.v1
                         ConfirmEmailUrl = appUrl + "/account/password-reset?code=" + code + "&email=" + user.Email,
                         AppUrl = appUrl
                     });
-                await _mailer.SendEmailAsync(user.Email, "Ztracené heslo", htmlBody);
+                await _mailer.SendEmailAsync(input.Email!, "Ztracené heslo", htmlBody);
                 return Ok();
             }
             return BadRequest();            

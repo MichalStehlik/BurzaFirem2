@@ -23,7 +23,7 @@ namespace BurzaFirem2.Models
         [JsonIgnore]
         public Company? CompanyLogo { get; set; }
         public int? CompanyLogoId { get; set; }
-        public ICollection<Thumbnail> Thumbnails { get; set; }
+        public ICollection<Thumbnail>? Thumbnails { get; set; }
         [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; } = DateTime.Now;
     }

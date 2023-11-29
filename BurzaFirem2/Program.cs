@@ -32,7 +32,7 @@ builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(sLog);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddOptions();
@@ -40,7 +40,7 @@ builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("JWT"));
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<RazorViewToStringRenderer>();
 builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
-builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<EmailSender>();
 builder.Services.Configure<FileStorageOptions>(builder.Configuration.GetSection("Upload"));
 builder.Services.AddScoped<FileStorageManager>();
 
@@ -88,7 +88,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.SaveToken = true;
-        var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]);
+        var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"] ?? "");
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -136,13 +136,13 @@ app.UseAuthorization();
 
 app.MapTus("/" + builder.Configuration.GetValue<string>("Upload:Endpoint"), async httpContext => new()
 {
-    Store = new tusdotnet.Stores.TusDiskStore(Path.Combine(app.Environment.ContentRootPath, builder.Configuration.GetValue<string>("Upload:UploadPath"))),
+    Store = new tusdotnet.Stores.TusDiskStore(Path.Combine(app.Environment.ContentRootPath, builder.Configuration.GetValue<string>("Upload:UploadPath") ?? "/Files")),
     MaxAllowedUploadSizeInBytes = 100000000,
     Events = new()
     {
         OnAuthorizeAsync = eventContext =>
         {
-            if (!eventContext.HttpContext.User.Identity.IsAuthenticated)
+            if (!eventContext.HttpContext.User.Identity!.IsAuthenticated)
             {
                 eventContext.FailRequest(HttpStatusCode.Unauthorized);
                 return Task.CompletedTask;
@@ -173,7 +173,7 @@ app.MapTus("/" + builder.Configuration.GetValue<string>("Upload:Endpoint"), asyn
         {
             var fsm = httpContext.RequestServices.GetService<FileStorageManager>();
             ITusFile file = await eventContext.GetFileAsync();
-            var image = await fsm.StoreTus(file, eventContext.CancellationToken);
+            var image = await fsm!.StoreTus(file, eventContext.CancellationToken);
         }
     }
 });

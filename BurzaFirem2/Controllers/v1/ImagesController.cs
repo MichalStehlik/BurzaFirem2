@@ -102,7 +102,7 @@ namespace BurzaFirem2.Controllers.v1
             {
                 return NotFound("file does not physically exists");
             }
-            return PhysicalFile(_fsm.FileName(id), storedImage.ContentType, storedImage.OriginalName);
+            return PhysicalFile(_fsm.FileName(id)!, storedImage.ContentType, storedImage.OriginalName);
         }
 
         // POST: api/v1/Images
@@ -111,7 +111,7 @@ namespace BurzaFirem2.Controllers.v1
         [Authorize(Policy = Security.EDITOR_POLICY)]
         public async Task<ActionResult<StoredImage>> PostStoredImage()
         {
-            ApplicationUser user = await _um.GetUserAsync(User);
+            ApplicationUser? user = await _um.GetUserAsync(User);
             if (user != null && Request.Form.Files.Count == 1)
             {
                 var file = Request.Form.Files[0];

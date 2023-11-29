@@ -32,10 +32,12 @@ namespace BurzaFirem2.Data
                 entity.HasOne(c => c.Logo).WithOne(i => i.CompanyLogo).HasForeignKey<Company>(c => c.LogoId);
                 entity.HasMany(c => c.Images).WithOne(i => i.Company).HasForeignKey(i => i.CompanyId).OnDelete(DeleteBehavior.Restrict);
             });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 1, Name = "IT", BackgroundColor = "#D90000", TextColor="#FFFFFF", Visible = true });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 2, Name = "Strojírenství", BackgroundColor = "#357BC2", TextColor = "#FFFFFF", Visible = true });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 3, Name = "Elektrotechnika", BackgroundColor = "#00AA80", TextColor = "#FFFFFF", Visible = true });
-            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 4, Name = "Lyceum", BackgroundColor = "#ECB100", TextColor = "#FFFFFF", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 1, Name = "IT", BackgroundColor = "#3cab68", TextColor="#FFFFFF", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 2, Name = "Strojírenství", BackgroundColor = "#429fe3", TextColor = "#FFFFFF", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 3, Name = "Elektrotechnika", BackgroundColor = "#e34242", TextColor = "#FFFFFF", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 4, Name = "Lyceum", BackgroundColor = "#e3a342", TextColor = "#FFFFFF", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 5, Name = "Oděvnictví", BackgroundColor = "#9c42e3", TextColor = "#FFFFFF", Visible = true });
+            modelBuilder.Entity<Branch>().HasData(new Branch { BranchId = 6, Name = "Textilnictví", BackgroundColor = "#e3428f", TextColor = "#FFFFFF", Visible = true });
             modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 1, Name = "Exkurze", Visible = true });
             modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 2, Name = "Čtrnáctidenní praxe", Visible = true });
             modelBuilder.Entity<Models.Activity>().HasData(new Models.Activity { ActivityId = 3, Name = "Dlouhodobá praxe", Visible = true });
@@ -65,7 +67,7 @@ namespace BurzaFirem2.Data
                     Email = "jobs@pslib.cz",
                     NormalizedEmail = "JOBS@PSLIB.CZ",
                     UserName = "jobs@pslib.cz",
-                    PasswordHash = hasher.HashPassword(null, "Admin_1234"),
+                    PasswordHash = hasher.HashPassword(new ApplicationUser(), "Admin_1234"),
                     SecurityStamp = "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI",
                     NormalizedUserName = "JOBS@PSLIB.CZ",
                     EmailConfirmed = true,
@@ -101,13 +103,19 @@ namespace BurzaFirem2.Data
                     entity.HasData(new Listing
                     {
                         ListingId = 1,
-                        Name = "2022",
+                        Name = "Virtuálně",
                         Created = DateTime.Now
                     });
                     entity.HasData(new Listing
                     {
                         ListingId = 2,
-                        Name = "2023",
+                        Name = "Prezenčně 2023",
+                        Created = DateTime.Now
+                    });
+                    entity.HasData(new Listing
+                    {
+                        ListingId = 3,
+                        Name = "Prezenčně 2024",
                         Created = DateTime.Now
                     });
                 });

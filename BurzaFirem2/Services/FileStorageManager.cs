@@ -33,7 +33,7 @@ namespace BurzaFirem2.Services
 
         public async Task<StoredImage?> StoreTus(ITusFile file, CancellationToken cancellationToken)
         {
-            _logger.Log(LogLevel.Debug, "Storing file ", file.Id);
+            _logger.LogDebug("Storing file" + file.Id);
 
             string? filename;
             string? contentType;
@@ -49,12 +49,12 @@ namespace BurzaFirem2.Services
 
             if (bitmapFormats.Contains(contentType))
             {
-                var userId = Guid.Parse(_hca.HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value);
-                IImageFormat format;
+                var userId = Guid.Parse(_hca.HttpContext!.User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value);
+                //IImageFormat format;
                 int imageWidth;
                 int imageHeight;
                 Guid id = Guid.NewGuid();
-                using (Image image = Image.Load(ims.ToArray(), out format))
+                using (Image image = Image.Load(ims.ToArray()))
                 {
                     int largestSize = Math.Max(image.Height, image.Width);
                     if (largestSize > _options.MaximumSize)
@@ -73,7 +73,7 @@ namespace BurzaFirem2.Services
                     try
                     {
                         var fileStream = File.Create(Path.Combine(_env.ContentRootPath, _options.StoragePath, id.ToString()));
-                        image.Save(fileStream,format);
+                        image.Save(fileStream, image.Metadata.DecodedImageFormat);
                         fileStream.Close();
 
                         var imageRecord = new StoredImage
@@ -153,12 +153,12 @@ namespace BurzaFirem2.Services
 
         private async Task<StoredImage> ProcessFile(string originalName, string contentType, MemoryStream contentStream)
         {
-            var userId = Guid.Parse(_hca.HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value);
-            IImageFormat format;
+            var userId = Guid.Parse(_hca.HttpContext!.User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value);
+            //IImageFormat format;
             int imageWidth;
             int imageHeight;
             Guid id = Guid.NewGuid();
-            using (Image image = Image.Load(contentStream.ToArray(), out format))
+            using (Image image = Image.Load(contentStream.ToArray()))
             {
                 int largestSize = Math.Max(image.Height, image.Width);
                 if (image.Width < image.Height)
@@ -172,7 +172,7 @@ namespace BurzaFirem2.Services
                 imageWidth = image.Width;
                 imageHeight = image.Height;
                 var fs = File.Create(Path.Combine(_env.ContentRootPath, _options.StoragePath, id.ToString()));
-                image.Save(fs, format);
+                image.Save(fs, image.Metadata.DecodedImageFormat);
                 fs.Close();
                 var imageRecord = new StoredImage
                 {
