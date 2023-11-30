@@ -1,0 +1,249 @@
+﻿@inject IConfiguration conf
+@inject IHttpContextAccessor hca
+@using Microsoft.Extensions.Options
+@using System.Web
+
+<!DOCTYPE html>
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>Email</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <style>
+        /* -- HTML for mail specific -- */
+        html,
+        body {
+            margin: 0 auto !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+
+        * {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        div[style*="margin: 16px 0"] {
+            margin: 0 !important;
+        }
+
+        table,
+        td {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+        }
+
+        table {
+            border-spacing: 0 !important;
+            border-collapse: collapse !important;
+            table-layout: fixed !important;
+        }
+
+        td {
+            padding: 0;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        *[x-apple-data-detectors], /* iOS */
+        .unstyle-auto-detected-links *,
+        .aBn {
+            border-bottom: 0 !important;
+            cursor: default !important;
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+
+        .im {
+            color: inherit !important;
+        }
+
+        /* If the above doesn't work, add a .g-img class to any image in question. */
+        img.g-img + div {
+            display: none !important;
+        }
+
+        @@media only screen and (min-device-width: 320px) and (max-device-width: 374px) {
+            u ~ div .email-container {
+                min-width: 320px !important;
+            }
+        }
+
+        @@media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+            u ~ div .email-container {
+                min-width: 375px !important;
+            }
+        }
+
+        @@media only screen and (min-device-width: 414px) {
+            u ~ div .email-container {
+                min-width: 414px !important;
+            }
+        }
+
+        /* -- Common definitions -- */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Instrument Sans', sans-serif;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+            font-weight: bold;
+        }
+
+        body {
+            font-family: sans-serif;
+            font-weight: normal;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .email-container {
+            border: 1px #b0b0b0 solid;
+            border-radius: .5rem;
+            margin: 1em auto !important;
+            padding: .5rem 0;
+            max-width: 640px;
+        }
+
+        .message-heading {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .message-body {
+            padding: .5rem;
+            color: #222222;
+            background-color: #fefaf1;
+        }
+
+        .cell-logo {
+            text-align: center;
+            vertical-align: middle;
+            width: 150px;
+        }
+
+            .cell-logo img {
+                width: 100px;
+            }
+
+
+            .accented h1 {
+                font-weight: bold;
+                color: white;
+            }
+
+        table.layout-table {
+            border: none;
+            width: 100%;
+            margin: auto;
+        }
+
+            table.layout-table tfoot tr td {
+                font-size: .8rem;
+                padding: .5rem;
+                text-align: center;
+            }
+
+                table.layout-table tfoot tr td a {
+                    color: white;
+                }
+
+        .primary {
+            background: #448ef6;
+        }
+
+        .bg_white {
+            background: #ffffff;
+        }
+
+        .bg_light {
+            background: #fafafa;
+        }
+
+        .bg_black {
+            background: #000000;
+        }
+
+        .bg_dark {
+            background: rgba(0,0,0,.8);
+        }
+
+        .email-section {
+            padding: 2.5em;
+        }
+
+        .btn {
+            padding: 5px 15px;
+            display: inline-block;
+        }
+
+            .btn.btn-primary {
+                border-radius: 30px;
+                background: #448ef6;
+                color: #ffffff;
+            }
+
+            .btn.btn-white {
+                border-radius: 30px;
+                background: #ffffff;
+                color: #000000;
+            }
+
+            .btn.btn-white-outline {
+                border-radius: 30px;
+                background: transparent;
+                border: 1px solid #fff;
+                color: #fff;
+            }
+
+        a {
+            color: #448ef6;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: .5em;
+            margin: .3em;
+        }
+
+            .btn.btn-success {
+                background-color: rgba(0,80,0,1);
+                color: white;
+            }
+
+    </style>
+</head>
+<body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly;">
+    <center style="width: 100%;">
+        <div style="max-width: 640px; margin: 0 auto;" class="email-container">
+            <table align="center" role="presentation" class="layout-table" cellspacing="0" cellpadding="0">
+                <tbody>
+                    <tr>
+                        <td class="message-body" colspan="1">
+                            @RenderBody()
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </center>
+</body>
+</html>

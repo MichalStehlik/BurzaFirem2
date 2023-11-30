@@ -6,6 +6,8 @@ import Detail from "./pages/Front/Detail"
 import AccountLayout from "./pages/Account"
 import Profile from "./pages/Account/Profile"
 import SignIn from "./pages/Account/SignIn"
+import Password from "./pages/Account/Password"
+import PasswordReset from "./pages/Account/PasswordReset"
 import AdminLayout from "./pages/Admin"
 import Dashboard from "./pages/Admin/Dashboard"
 import Token from "./pages/Admin/Token"
@@ -52,6 +54,8 @@ export default class App extends Component {
           <Route path='/account' element={<AccountLayout />}>
             <Route index element={<Profile />} />
             <Route path="/account/sign-in" element={<SignIn />} />
+            <Route path="/account/password-recovery" element={<Password />} />
+            <Route path="/account/password-reset" element={<PasswordReset />} />
           </Route>
           <Route path='/' element={<FrontLayout />}>
             <Route index element={<Home />} />

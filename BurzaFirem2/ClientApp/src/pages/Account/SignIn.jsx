@@ -3,6 +3,7 @@ import axios from "axios"
 import { Card, CardBody, CardHeader, Button, Input, Form, FormGroup, Label } from 'reactstrap';
 import { useAuthContext, SET_ACCESS_TOKEN } from "../../providers/AuthProvider"
 import { useNavigate } from "react-router-dom"
+import { Link } from 'react-router-dom'
 
 export const SignIn = () => {
     const { control, register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -39,7 +40,8 @@ export const SignIn = () => {
             <Controller name="password" control={control} render={({ field }) => <Input type="password" {...field} />} />    
             </FormGroup>
             <FormGroup>
-                <Button type="submit" color="primary">Přihlásit</Button>
+                <Button type="submit" color="primary">Přihlásit</Button>{" "}
+                <Link to="/account/password-recovery"><Button color="link">Zapomenuté heslo</Button></Link>
             </FormGroup>
             </Form>
             </CardBody>

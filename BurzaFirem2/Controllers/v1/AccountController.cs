@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using NuGet.Common;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -147,7 +148,7 @@ namespace BurzaFirem2.Controllers.v1
         public async Task<IActionResult> SendRecoveryEmailAsync(EmailIM input)
         {
             var user = await _um.FindByEmailAsync(input.Email!);
-            if (user != null && !(await _um.IsEmailConfirmedAsync(user)))
+            if (user != null && (await _um.IsEmailConfirmedAsync(user)))
             {
                 var code = await _um.GeneratePasswordResetTokenAsync(user);
                 _logger.LogInformation("Recovery email for " + input.Email + " can be sent.");
@@ -173,18 +174,19 @@ namespace BurzaFirem2.Controllers.v1
         {
 
             var user = await _um.FindByEmailAsync(input.Email);
+            string decodedToken = input.Code.Replace(" ", "+");
             if (user == null)
             {
                 _logger.LogError("There is no user " + input.Email + " to set a new password.");
                 return NotFound();
             }
-            var result = await _um.ResetPasswordAsync(user, input.Code, input.Password);
+            var result = await _um.ResetPasswordAsync(user, /*input.Code*/decodedToken, input.Password);
             if (result.Succeeded)
             {
                 _logger.LogInformation("Password for " + user.Email + " was set.");
                 return Ok();
             }
-            _logger.LogError("Password for " + user.Email + " was not set.");
+            _logger.LogError("Password for " + user.Email + " was not set. " + result.ToString());
             return BadRequest("password was not set");            
         }
     }
