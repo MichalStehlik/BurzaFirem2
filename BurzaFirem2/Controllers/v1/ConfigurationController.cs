@@ -27,6 +27,7 @@ namespace BurzaFirem2.Controllers.v1
                 PasswordLowercase = _configuration["Password:Lowercase"],
                 PasswordDigit = _configuration["Password:Digit"],
                 PasswordNonalphanumeric = _configuration["Password:NonAlphaNumeric"],
+                Debug = _configuration["Application:Debug"] ?? "0",
             };
         }
     }
